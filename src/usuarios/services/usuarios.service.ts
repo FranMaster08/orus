@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { UsuariosEntity } from '../entities/usuarios.entity';
 import { EspecialidadesServive } from '../../shared/especialidades.service';
 import { CreateUsuariosDto } from '../dto/createUsuarios.dto';
-import { hash } from 'bcryptjs';
+import { compare, hash } from 'bcryptjs';
 
 @Injectable()
 export class UsuariosService {
@@ -28,12 +28,11 @@ export class UsuariosService {
 
     const userCreate = await this.usuariosRepository.create(nuevoUsuario);
     const userSave = await this.usuariosRepository.save(userCreate);
-    
-    
+
     // TODO: enviar email
-    
+
     let createdUser = await this.usuariosRepository.findOne(userSave.id, {});
-    
+
     return createdUser;
   }
 
@@ -41,16 +40,18 @@ export class UsuariosService {
     return await hash(password, 8); // FIXME: pasar el saltLength (8) a /config/auth.ts
   }
 
+  async validatePassword(
+    canditatePassword: string,
+    password: string,
+  ): Promise<boolean> {
+    return await compare(canditatePassword, password);
+  }
+
   async findOne(query: any): Promise<UsuariosEntity> {
     return await this.usuariosRepository.findOne({ where: query });
   }
 
-  getUsuarioDoctor() {
-    console.log('Doctor Shapatin tiene estas especialidades: ');
-    this.especialidadesService.getEspecialidades();
-    this.getUsuarios();
-  }
-
+  
   async getUsuarios(): Promise<void> {
     const usuarios = await this.usuariosRepository.find();
     console.log('getUsuarios :>> ', usuarios);
