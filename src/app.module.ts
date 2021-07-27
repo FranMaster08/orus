@@ -7,7 +7,7 @@ import { LibrosService } from './libros/libros.service';
 // import { ConfigService } from './config/config.service';
 // import { Configuration } from './config/config.keys';
 import { UsuariosModule } from './usuarios/usuarios.module';
-import { Usuarios } from './usuarios/entities/usuarios.entity';
+import { UsuariosEntity } from './usuarios/entities/usuarios.entity';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
@@ -21,7 +21,7 @@ import { AuthModule } from './auth/auth.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [Usuarios],
+      entities: [UsuariosEntity],
       synchronize: false,
     }),
     // ConfigModule,
