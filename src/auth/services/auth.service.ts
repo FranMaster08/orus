@@ -49,7 +49,10 @@ export class AuthService {
       status: user.status,
     };
 
-    const accessToken = this.jwtService.sign(jwtPayload);
+    const accessToken = this.jwtService.sign(jwtPayload, {
+      issuer: 'editor', // FIXME: agregar en config auth
+      expiresIn: '1day', // FIXME: agregar en config auth
+    });
 
     return {
       token: accessToken,

@@ -6,13 +6,16 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { InsertarLibrosDto } from './dto/insertar.libros.dto';
 import { ResponseDto } from './dto/response.dto';
 import LibroInterfaz from './interfaces/libros.interfaces';
 import { LibrosService } from './libros.service';
 
 @Controller('libros')
+@UseGuards(AuthGuard('jwt'))
 export class LibrosController {
   constructor(
     private librosService: LibrosService,
