@@ -8,6 +8,7 @@ import { LibrosService } from './libros/libros.service';
 // import { Configuration } from './config/config.keys';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { Usuarios } from './usuarios/entities/usuarios.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { Usuarios } from './usuarios/entities/usuarios.entity';
     }),
     // ConfigModule,
     UsuariosModule,
+    AuthModule,
   ],
   controllers: [LibrosController],
   providers: [LibrosService],

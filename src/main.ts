@@ -1,11 +1,20 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  console.log('process.env.DB_HOST :>> ', process.env.DB_HOST);
-
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api');
+  // app.setGlobalPrefix('api');
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+    }),
+  );
+
   await app.listen(5005);
+  console.log(`Application is running on: ${await app.getUrl()}`);
+  console.log();
 }
 bootstrap();
