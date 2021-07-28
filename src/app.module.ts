@@ -9,6 +9,8 @@ import { LibrosService } from './libros/libros.service';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { UsuariosEntity } from './usuarios/entities/usuarios.entity';
 import { AuthModule } from './auth/auth.module';
+import { DoctorsModule } from './doctors/doctors.module';
+import { DoctorsEntity } from './doctors/entities/doctors.entity';
 
 @Module({
   imports: [
@@ -21,12 +23,13 @@ import { AuthModule } from './auth/auth.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [UsuariosEntity],
+      entities: [UsuariosEntity, DoctorsEntity],
       synchronize: false,
     }),
     // ConfigModule,
     UsuariosModule,
     AuthModule,
+    DoctorsModule,
   ],
   controllers: [LibrosController],
   providers: [LibrosService],
