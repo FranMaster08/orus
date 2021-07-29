@@ -21,5 +21,5 @@ export class DoctorsEntity {
   consultation_rooms: string; // TODO: hacer interfaces de estructura detallada de objeto
 
   @Column()
-  insurance_companies: string; // TODO: hacer interfaces de estructura detallada de objeto
+  insurance_companies: string; // TODO: hacer interfaces de estructura detallada de objeto,,  o lo recibe asi como string ? porque lle hace un JSON.strinfy
 }

@@ -1,0 +1,6 @@
+export enum ConsultationsStatus {
+  PENDING = 'PENDING',
+  ATTENDED = 'ATTENDED',
+  CANCELLED = 'CANCELLED',
+  PENDING_PAYMENT = 'PENDING_PAYMENT',
+}
