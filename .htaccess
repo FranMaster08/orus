@@ -7,4 +7,4 @@ RewriteRule ^(.*)$ http://127.0.0.1:5005/ [P,L]
 RewriteRule ^$ http://127.0.0.1:5005/ [P,L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ http://127.0.0.1:3100/$1 [P,L]
+RewriteRule ^(.*)$ http://127.0.0.1:5005/$1 [P,L]
