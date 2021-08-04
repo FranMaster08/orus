@@ -15,7 +15,7 @@ import LibroInterfaz from './interfaces/libros.interfaces';
 import { LibrosService } from './libros.service';
 
 @Controller('libros')
-@UseGuards(AuthGuard('jwt'))
+// @UseGuards(AuthGuard('jwt'))
 export class LibrosController {
   constructor(
     private librosService: LibrosService,
@@ -23,9 +23,15 @@ export class LibrosController {
   ) {}
 
   @Get()
-  getLibros(): ResponseDto {
-    return this.librosService2.obtenerLibros();
+  getLibros() {
+    console.log('object :>>  PRUEBA');
+    return "ok";
   }
+
+  // @Get()
+  // getLibros(): ResponseDto {
+  //   return this.librosService2.obtenerLibros();
+  // }
 
   @Get(':id')
   async getLibro(@Param('id') id: string) {
