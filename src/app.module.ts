@@ -13,6 +13,8 @@ import { DoctorsModule } from './doctors/doctors.module';
 import { DoctorsEntity } from './doctors/entities/doctors.entity';
 import { ConsultationsModule } from './consultations/consultations.module';
 import { ConsultationsEntity } from './consultations/entities/consultations.entity';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -34,7 +36,7 @@ import { ConsultationsEntity } from './consultations/entities/consultations.enti
     DoctorsModule,
     ConsultationsModule,
   ],
-  controllers: [LibrosController],
-  providers: [LibrosService],
+  controllers: [LibrosController, AppController],
+  providers: [LibrosService, AppService],
 })
 export class AppModule {}
