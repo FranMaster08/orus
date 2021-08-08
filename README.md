@@ -1,7 +1,8 @@
-<strong>Stack:<strong> NodeJS | NestJS | TypeScript | MySQL
-  
 
-
+## Stack
+```
+NodeJS | NestJS | TypeScript | MySQL
+```
 
 
 ## Installation
