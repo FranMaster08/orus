@@ -39,17 +39,17 @@ export class ConsultationsEntity {
   date: Date;
 
   @Column()
-  observations: string; // TODO: tipar
+  observations: string;
 
   @Column()
-  prescriptions: string; // TODO: tipar
+  prescriptions: string;
 
   @Column()
-  exams: string; // TODO: tipar
+  exams: string;
 
   @CreateDateColumn()
-  create_at: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  update_at: Date;
+  updated_at: Date;
 }

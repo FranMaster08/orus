@@ -1,5 +1,5 @@
 export enum ConsultationsType {
-  'FACE-TO-FACE' = 'FACE-TO-FACE',
+  FACE_TO_FACE = 'FACE_TO_FACE',
   ONLINE = 'ONLINE',
   WRITTEN = 'WRITTEN',
   SURGERY = 'SURGERY',

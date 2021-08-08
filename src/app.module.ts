@@ -13,8 +13,8 @@ import { DoctorsModule } from './doctors/doctors.module';
 import { DoctorsEntity } from './doctors/entities/doctors.entity';
 import { ConsultationsModule } from './consultations/consultations.module';
 import { ConsultationsEntity } from './consultations/entities/consultations.entity';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { MedicalHistoryEntity } from './medicalHistory/entities/medical-history.entity';
+import { MedicalHistoryModule } from './medicalHistory/medical-history.module';
 
 @Module({
   imports: [
@@ -27,7 +27,12 @@ import { AppService } from './app.service';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [UsuariosEntity, DoctorsEntity, ConsultationsEntity],
+      entities: [
+        UsuariosEntity,
+        DoctorsEntity,
+        ConsultationsEntity,
+        MedicalHistoryEntity,
+      ],
       synchronize: false,
     }),
     // ConfigModule,
@@ -35,8 +40,9 @@ import { AppService } from './app.service';
     AuthModule,
     DoctorsModule,
     ConsultationsModule,
+    MedicalHistoryModule,
   ],
-  controllers: [LibrosController, AppController],
-  providers: [LibrosService, AppService],
+  controllers: [LibrosController],
+  providers: [LibrosService],
 })
 export class AppModule {}
