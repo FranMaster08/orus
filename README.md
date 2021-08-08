@@ -1,6 +1,6 @@
 
 ## Stack
-```bash
+```
 NodeJS | NestJS | TypeScript | MySQL
 ```
 
