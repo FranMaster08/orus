@@ -8,7 +8,7 @@ import {
   Param,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { RoleType } from 'src/role/roletype.enum';
+import { RoleType } from '../../role/roletype.enum';
 import { CancelConsultationDto } from '../dto/cancel-consultation.dto';
 import { CreateConsultationDto } from '../dto/create-consultation.dto';
 import { RescheduleConsultationDto } from '../dto/reschedule-consultation.dto';

@@ -24,6 +24,9 @@ export class UsuariosService {
     nuevoUsuario.first_name = user.first_name;
     nuevoUsuario.last_name = user.last_name;
     nuevoUsuario.email = user.email;
+    nuevoUsuario.gender = user.gender;
+    nuevoUsuario.rol = user.rol;
+    nuevoUsuario.birth_date = user.birth_date;
     nuevoUsuario.password = await this.hashPassword(user.password);
 
     const userCreate = await this.usuariosRepository.create(nuevoUsuario);
@@ -51,7 +54,6 @@ export class UsuariosService {
     return await this.usuariosRepository.findOne({ where: query });
   }
 
-  
   async getUsuarios(): Promise<void> {
     const usuarios = await this.usuariosRepository.find();
     console.log('getUsuarios :>> ', usuarios);

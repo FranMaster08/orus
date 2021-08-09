@@ -1,4 +1,13 @@
-import { IsEmail, IsNotEmpty, IsString, Min, MinLength } from 'class-validator';
+import {
+  IsDateString,
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsString,
+  MinLength,
+} from 'class-validator';
+import { RoleType } from '../../role/roletype.enum';
+import { GenderType } from '../enum/gender.enum';
 
 export class CreateUsuariosDto {
   @IsNotEmpty()
@@ -16,4 +25,18 @@ export class CreateUsuariosDto {
   @IsString()
   @MinLength(6)
   readonly password: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @IsEnum(RoleType)
+  readonly rol: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @IsEnum(GenderType)
+  readonly gender: string;
+
+  @IsNotEmpty()
+  @IsDateString()
+  readonly birth_date: Date;
 }

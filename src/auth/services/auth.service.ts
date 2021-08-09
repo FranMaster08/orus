@@ -5,6 +5,7 @@ import { UsuariosService } from '../../usuarios/services/usuarios.service';
 import { LoginCredentialsDto } from '../dto/LoginCredentialsDto';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { JwtService } from '@nestjs/jwt';
+import { UserStatusEnum } from '../../usuarios/enum/user-status.enum';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +23,7 @@ export class AuthService {
       email: credentials.username,
     });
 
-    if (!user || user.status !== 'active') {
+    if (!user || user.status !== UserStatusEnum.ACTIVE) {
       throw new ConflictException('Invalid credentials');
     }
 
@@ -47,6 +48,7 @@ export class AuthService {
       last_name: user.last_name,
       email: user.email,
       status: user.status,
+      rol: user.rol,
     };
 
     const accessToken = this.jwtService.sign(jwtPayload, {

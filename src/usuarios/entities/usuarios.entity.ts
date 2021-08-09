@@ -1,3 +1,4 @@
+import { RoleType } from '../../role/roletype.enum';
 import {
   Column,
   CreateDateColumn,
@@ -5,6 +6,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { UserStatusEnum } from '../enum/user-status.enum';
+import { GenderType } from '../enum/gender.enum';
 
 @Entity('users')
 export class UsuariosEntity {
@@ -24,9 +27,25 @@ export class UsuariosEntity {
   password: string;
 
   @Column({
-    default: 'active',
+    type: 'enum',
+    enum: UserStatusEnum,
   })
   status: string;
+
+  @Column({
+    type: 'enum',
+    enum: RoleType,
+  })
+  rol: string;
+
+  @Column({
+    type: 'enum',
+    enum: GenderType,
+  })
+  gender: string;
+
+  @Column()
+  birth_date: Date;
 
   @CreateDateColumn()
   created_at: Date;

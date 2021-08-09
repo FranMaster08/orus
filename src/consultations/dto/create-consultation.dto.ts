@@ -1,11 +1,8 @@
 import {
   IsArray,
-  IsDate,
   IsDateString,
-  IsEmpty,
   IsEnum,
   IsNotEmpty,
-  IsObject,
   IsString,
 } from 'class-validator';
 import { ConsultationsStatus } from '../enum/consultations-status.enum';
