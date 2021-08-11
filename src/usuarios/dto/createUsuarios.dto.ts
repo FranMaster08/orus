@@ -29,7 +29,7 @@ export class CreateUsuariosDto {
   @IsNotEmpty()
   @IsString()
   @IsEnum(RoleType)
-  readonly rol: string;
+  readonly role: string;
 
   @IsNotEmpty()
   @IsString()

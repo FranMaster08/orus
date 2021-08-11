@@ -10,7 +10,7 @@ import { UserStatusEnum } from '../enum/user-status.enum';
 import { GenderType } from '../enum/gender.enum';
 
 @Entity('users')
-export class UsuariosEntity {
+export class UsersEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -22,6 +22,12 @@ export class UsuariosEntity {
 
   @Column()
   email: string;
+
+  @Column()
+  dni: string;
+
+  @Column()
+  passport: string;
 
   @Column()
   password: string;
@@ -36,7 +42,7 @@ export class UsuariosEntity {
     type: 'enum',
     enum: RoleType,
   })
-  rol: string;
+  role: string;
 
   @Column({
     type: 'enum',

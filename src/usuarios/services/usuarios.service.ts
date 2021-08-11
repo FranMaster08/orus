@@ -1,7 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UsuariosEntity } from '../entities/usuarios.entity';
+import { UsersEntity } from '../entities/usuarios.entity';
 import { EspecialidadesServive } from '../../shared/especialidades.service';
 import { CreateUsuariosDto } from '../dto/createUsuarios.dto';
 import { compare, hash } from 'bcryptjs';
@@ -10,8 +10,8 @@ import { compare, hash } from 'bcryptjs';
 export class UsuariosService {
   constructor(
     private readonly especialidadesService: EspecialidadesServive,
-    @InjectRepository(UsuariosEntity, 'thv-db')
-    private usuariosRepository: Repository<UsuariosEntity>,
+    @InjectRepository(UsersEntity, 'thv-db')
+    private usuariosRepository: Repository<UsersEntity>,
   ) {}
 
   async crearUsuario(user: CreateUsuariosDto) {
@@ -20,12 +20,12 @@ export class UsuariosService {
       throw new ConflictException('User already exists');
     }
 
-    const nuevoUsuario = new UsuariosEntity();
+    const nuevoUsuario = new UsersEntity();
     nuevoUsuario.first_name = user.first_name;
     nuevoUsuario.last_name = user.last_name;
     nuevoUsuario.email = user.email;
     nuevoUsuario.gender = user.gender;
-    nuevoUsuario.rol = user.rol;
+    nuevoUsuario.role = user.role;
     nuevoUsuario.birth_date = user.birth_date;
     nuevoUsuario.password = await this.hashPassword(user.password);
 
@@ -50,7 +50,7 @@ export class UsuariosService {
     return await compare(canditatePassword, password);
   }
 
-  async findOne(query: any): Promise<UsuariosEntity> {
+  async findOne(query: any): Promise<UsersEntity> {
     return await this.usuariosRepository.findOne({ where: query });
   }
 
