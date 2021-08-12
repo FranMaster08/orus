@@ -7,7 +7,7 @@ export interface Patient {
   lastName: string;
   email: string;
   dni: string;
-  status: UserStatusEnum.ACTIVE | UserStatusEnum.BLOCKED;
+  status: UserStatusEnum;
   birthDate: Date;
-  gender: GenderType.MALE | GenderType.FELAME;
+  gender: GenderType;
 }
