@@ -20,12 +20,12 @@ export class CreateConsultationDto {
   @IsNotEmpty()
   @IsString()
   @IsEnum(ConsultationsStatus)
-  status: string;
+  status: ConsultationsStatus;
 
   @IsNotEmpty()
   @IsString()
   @IsEnum(ConsultationsType)
-  type: string;
+  type: ConsultationsType;
 
   @IsString()
   family_id: string;

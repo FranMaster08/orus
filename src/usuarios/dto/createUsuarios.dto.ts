@@ -29,12 +29,12 @@ export class CreateUsuariosDto {
   @IsNotEmpty()
   @IsString()
   @IsEnum(RoleType)
-  readonly role: string;
+  readonly role: RoleType;
 
   @IsNotEmpty()
   @IsString()
   @IsEnum(GenderType)
-  readonly gender: string;
+  readonly gender: GenderType;
 
   @IsNotEmpty()
   @IsDateString()

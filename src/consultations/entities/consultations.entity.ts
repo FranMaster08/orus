@@ -24,13 +24,13 @@ export class ConsultationsEntity {
     enum: ConsultationsStatus,
     default: ConsultationsStatus.PENDING,
   })
-  status: string;
+  status: ConsultationsStatus;
 
   @Column({
     type: 'enum',
     enum: ConsultationsType,
   })
-  type: string;
+  type: ConsultationsType;
 
   @Column()
   family_id: string;

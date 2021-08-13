@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RoleType } from '../../role/roletype.enum';
 import { Repository } from 'typeorm';
@@ -8,17 +8,22 @@ import { RescheduleConsultationDto } from '../dto/reschedule-consultation.dto';
 import { UpdateConsultationDto } from '../dto/update-consultation.dto';
 import { ConsultationsEntity } from '../entities/consultations.entity';
 import { ConsultationsStatus } from '../enum/consultations-status.enum';
+import { IConsultation } from 'src/shared/interfaces/consultations.interfaces';
 
 @Injectable()
 export class ConsultationsService {
+  logger = new Logger(ConsultationsService.name);
+
   constructor(
     @InjectRepository(ConsultationsEntity, 'thv-db')
     private readonly consultationsRepository: Repository<ConsultationsEntity>,
   ) {}
 
-  async crearConsulta(
+  async createConsultation(
     data: CreateConsultationDto,
   ): Promise<ConsultationsEntity> {
+    this.logger.log('BEGIN [createConsultation] ' + JSON.stringify(data));
+
     const newConsultation = new ConsultationsEntity();
     newConsultation.doctor_id = data.doctor_id;
     newConsultation.patient_id = data.patient_id;
@@ -39,10 +44,31 @@ export class ConsultationsService {
     // TODO: verificar si el paciente tiene 2 consultas por atender, solo puede tener 2 por atender
   }
 
+  async getConsultations(role: RoleType, id: string): Promise<IConsultation[]> {
+    let consultations: IConsultation[];
+    if (role === RoleType.DOCTOR) {
+      consultations = await this.consultationsRepository.find({
+        where: { doctor_id: id },
+      });
+    } else if (role === RoleType.PATIENT) {
+      consultations = await this.consultationsRepository.find({
+        where: { patient_id: id },
+      });
+    } else if (role === RoleType.ADMIN) {
+      consultations = await this.consultationsRepository.find();
+    }
+
+    return consultations;
+  }
+
   async updateConsultation(
     id: string,
     data: UpdateConsultationDto,
   ): Promise<ConsultationsEntity> {
+    this.logger.log(
+      `BEGIN [${this.updateConsultation.name}] Params[id: string = ${id}]`,
+    );
+
     if (!(await this.consultationsRepository.findOne(id))) {
       throw new NotFoundException('Medical consultation not found');
     }
@@ -65,6 +91,10 @@ export class ConsultationsService {
     data: CancelConsultationDto,
     user_rol: RoleType.PATIENT | RoleType.DOCTOR,
   ): Promise<ConsultationsEntity> {
+    this.logger.log(
+      `BEGIN [${this.cancelConsultation.name}] Params[id: string = ${id}]`,
+    );
+
     if (!(await this.consultationsRepository.findOne(id))) {
       throw new NotFoundException('Medical consultation not found');
     }
@@ -92,6 +122,10 @@ export class ConsultationsService {
     data: RescheduleConsultationDto,
     user_rol: RoleType.PATIENT | RoleType.DOCTOR,
   ): Promise<ConsultationsEntity> {
+    this.logger.log(
+      `BEGIN [${this.rescheduleConsultation.name}] Params[id: string = ${id}]`,
+    );
+
     if (!(await this.consultationsRepository.findOne(id))) {
       throw new NotFoundException('Medical consultation not found');
     }

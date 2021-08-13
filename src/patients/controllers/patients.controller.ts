@@ -1,6 +1,6 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Patient } from 'src/shared/interfaces/patients.interfaces';
+import { IPatient } from 'src/shared/interfaces/patients.interfaces';
 import { PatientsService } from '../services/patients.service';
 
 @Controller('patients')
@@ -9,7 +9,7 @@ export class PatientsController {
   constructor(private readonly patientsService: PatientsService) {}
 
   @Get()
-  async getPatients(): Promise<Patient[]> {
+  async getPatients(): Promise<IPatient[]> {
     return await this.patientsService.getPatients();
   }
 }

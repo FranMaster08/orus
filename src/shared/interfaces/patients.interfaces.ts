@@ -1,7 +1,7 @@
 import { GenderType } from 'src/usuarios/enum/gender.enum';
 import { UserStatusEnum } from 'src/usuarios/enum/user-status.enum';
 
-export interface Patient {
+export interface IPatient {
   id: string;
   firstName: string;
   lastName: string;
