@@ -22,8 +22,8 @@ export class MedicalHistoryService {
     if (
       await this.medicalHistoryRepository.findOne({
         where: {
-          patient_id: data.patient_id,
-          doctor_id: data.doctor_id,
+          patientId: data.patientId,
+          doctorId: data.doctorId,
         },
       })
     ) {
@@ -33,8 +33,8 @@ export class MedicalHistoryService {
     }
 
     const newMedicalHistory = new MedicalHistoryEntity();
-    newMedicalHistory.doctor_id = data.doctor_id;
-    newMedicalHistory.patient_id = data.patient_id;
+    newMedicalHistory.doctorId = data.doctorId;
+    newMedicalHistory.patientId = data.patientId;
     newMedicalHistory.history = JSON.stringify(data.history);
 
     return this.medicalHistoryRepository.save(newMedicalHistory);
@@ -51,8 +51,6 @@ export class MedicalHistoryService {
     await this.medicalHistoryRepository.update(
       {
         id: id,
-        // patient_id: data.patient_id,
-        // doctor_id: data.doctor_id,
       },
       {
         history: JSON.stringify(data.history),

@@ -11,18 +11,18 @@ export class MedicalHistoryEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  patient_id: string;
+  @Column({ name: 'patient_id' })
+  patientId: string;
 
-  @Column()
-  doctor_id: string;
+  @Column({ name: 'doctor_id' })
+  doctorId: string;
 
   @Column()
   history: string;
 
-  @CreateDateColumn()
-  created_at: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 
-  @UpdateDateColumn()
-  updated_at: Date;
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 }

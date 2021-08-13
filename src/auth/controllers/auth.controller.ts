@@ -1,5 +1,5 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
-import { CreateUsuariosDto } from '../../usuarios/dto/createUsuarios.dto';
+import { CreateUsuariosDto } from '../../users/dto/createUsuarios.dto';
 import { LoginCredentialsDto } from '../dto/LoginCredentialsDto';
 import { AuthService } from '../services/auth.service';
 

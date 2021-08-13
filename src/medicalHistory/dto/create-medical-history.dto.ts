@@ -3,11 +3,11 @@ import { IsArray, IsNotEmpty, IsString } from 'class-validator';
 export class CreateMedicalHistoryDto {
   @IsNotEmpty()
   @IsString()
-  patient_id: string;
+  patientId: string;
 
   @IsNotEmpty()
   @IsString()
-  doctor_id: string;
+  doctorId: string;
 
   @IsNotEmpty()
   @IsArray()

@@ -1,11 +1,11 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { CreateUsuariosDto } from '../../usuarios/dto/createUsuarios.dto';
-import { UsersEntity } from 'src/usuarios/entities/usuarios.entity';
-import { UsuariosService } from '../../usuarios/services/usuarios.service';
+import { CreateUsuariosDto } from '../../users/dto/createUsuarios.dto';
+import { UsersEntity } from '../../users/entities/users.entity';
+import { UsuariosService } from '../../users/services/users.service';
 import { LoginCredentialsDto } from '../dto/LoginCredentialsDto';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { JwtService } from '@nestjs/jwt';
-import { UserStatusEnum } from '../../usuarios/enum/user-status.enum';
+import { UserStatusEnum } from '../../users/enum/user-status.enum';
 
 @Injectable()
 export class AuthService {
@@ -44,8 +44,8 @@ export class AuthService {
   async generateJWT(user: UsersEntity): Promise<any> {
     const jwtPayload: JwtPayload = {
       id: user.id,
-      first_name: user.first_name,
-      last_name: user.last_name,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       status: user.status,
       role: user.role,

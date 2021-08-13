@@ -1,5 +1,5 @@
-import { GenderType } from 'src/usuarios/enum/gender.enum';
-import { UserStatusEnum } from 'src/usuarios/enum/user-status.enum';
+import { GenderType } from 'src/users/enum/gender.enum';
+import { UserStatusEnum } from 'src/users/enum/user-status.enum';
 
 export interface IPatient {
   id: string;

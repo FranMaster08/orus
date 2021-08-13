@@ -25,11 +25,11 @@ export class ConsultationsService {
     this.logger.log('BEGIN [createConsultation] ' + JSON.stringify(data));
 
     const newConsultation = new ConsultationsEntity();
-    newConsultation.doctor_id = data.doctor_id;
-    newConsultation.patient_id = data.patient_id;
+    newConsultation.doctorId = data.doctorId;
+    newConsultation.patientId = data.patientId;
     newConsultation.status = data.status;
     newConsultation.type = data.type;
-    newConsultation.family_id = data.family_id;
+    newConsultation.family_id = data.familyId;
     newConsultation.date = data.date;
     newConsultation.observations = JSON.stringify(data.observations);
     newConsultation.prescriptions = JSON.stringify(data.prescriptions);
@@ -48,15 +48,17 @@ export class ConsultationsService {
     let consultations: IConsultation[];
     if (role === RoleType.DOCTOR) {
       consultations = await this.consultationsRepository.find({
-        where: { doctor_id: id },
+        where: { doctorId: id }, relations: ['patientData']
       });
     } else if (role === RoleType.PATIENT) {
       consultations = await this.consultationsRepository.find({
-        where: { patient_id: id },
+        where: { patientId: id },
       });
     } else if (role === RoleType.ADMIN) {
       consultations = await this.consultationsRepository.find();
     }
+
+    
 
     return consultations;
   }

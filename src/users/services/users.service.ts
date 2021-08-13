@@ -1,7 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UsersEntity } from '../entities/usuarios.entity';
+import { UsersEntity } from '../entities/users.entity';
 import { EspecialidadesServive } from '../../shared/especialidades.service';
 import { CreateUsuariosDto } from '../dto/createUsuarios.dto';
 import { compare, hash } from 'bcryptjs';
@@ -21,12 +21,12 @@ export class UsuariosService {
     }
 
     const nuevoUsuario = new UsersEntity();
-    nuevoUsuario.first_name = user.first_name;
-    nuevoUsuario.last_name = user.last_name;
+    nuevoUsuario.firstName = user.firstName;
+    nuevoUsuario.lastName = user.lastName;
     nuevoUsuario.email = user.email;
     nuevoUsuario.gender = user.gender;
     nuevoUsuario.role = user.role;
-    nuevoUsuario.birth_date = user.birth_date;
+    nuevoUsuario.birthDate = user.birthDate;
     nuevoUsuario.password = await this.hashPassword(user.password);
 
     const userCreate = await this.usuariosRepository.create(nuevoUsuario);

@@ -11,11 +11,11 @@ import { ConsultationsType } from '../enum/consultations-type.enum';
 export class CreateConsultationDto {
   @IsNotEmpty()
   @IsString()
-  doctor_id: string;
+  doctorId: string;
 
   @IsNotEmpty()
   @IsString()
-  patient_id: string;
+  patientId: string;
 
   @IsNotEmpty()
   @IsString()
@@ -28,7 +28,7 @@ export class CreateConsultationDto {
   type: ConsultationsType;
 
   @IsString()
-  family_id: string;
+  familyId: string;
 
   @IsNotEmpty()
   @IsDateString()

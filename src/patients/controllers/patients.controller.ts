@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { IPatient } from 'src/shared/interfaces/patients.interfaces';
 import { PatientsService } from '../services/patients.service';
@@ -11,5 +11,10 @@ export class PatientsController {
   @Get()
   async getPatients(): Promise<IPatient[]> {
     return await this.patientsService.getPatients();
+  }
+
+  @Get(':id')
+  async getPatient(@Param('id') id: string): Promise<IPatient> {
+    return await this.patientsService.getPatientById(id);
   }
 }

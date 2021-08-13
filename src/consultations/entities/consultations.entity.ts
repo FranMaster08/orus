@@ -1,7 +1,10 @@
+import { UsersEntity } from 'src/users/entities/users.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -13,11 +16,11 @@ export class ConsultationsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  doctor_id: string;
+  @Column({ name: 'doctor_id' })
+  doctorId: string;
 
-  @Column()
-  patient_id: string;
+  @Column({ name: 'patient_id' })
+  patientId: string;
 
   @Column({
     type: 'enum',
@@ -32,7 +35,7 @@ export class ConsultationsEntity {
   })
   type: ConsultationsType;
 
-  @Column()
+  @Column({ name: 'family_id' })
   family_id: string;
 
   @Column()
@@ -47,9 +50,13 @@ export class ConsultationsEntity {
   @Column()
   exams: string;
 
-  @CreateDateColumn()
-  created_at: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 
-  @UpdateDateColumn()
-  updated_at: Date;
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+
+  @ManyToOne(() => UsersEntity, { cascade: false, nullable: false })
+  @JoinColumn({ name: 'patient_id', referencedColumnName: 'id' })
+  patientData: UsersEntity;
 }
