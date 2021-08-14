@@ -6,5 +6,5 @@ export interface IConsultation {
   date: Date;
   status: ConsultationsStatus;
   type: ConsultationsType;
-  patientData?: IPatient
+  patient?: IPatient;
 }

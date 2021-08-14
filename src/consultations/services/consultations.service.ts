@@ -48,7 +48,7 @@ export class ConsultationsService {
     let consultations: IConsultation[];
     if (role === RoleType.DOCTOR) {
       consultations = await this.consultationsRepository.find({
-        where: { doctorId: id }, relations: ['patientData']
+        where: { doctorId: id }, relations: ['patient']
       });
     } else if (role === RoleType.PATIENT) {
       consultations = await this.consultationsRepository.find({

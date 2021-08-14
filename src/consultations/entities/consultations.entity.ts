@@ -58,5 +58,5 @@ export class ConsultationsEntity {
 
   @ManyToOne(() => UsersEntity, { cascade: false, nullable: false })
   @JoinColumn({ name: 'patient_id', referencedColumnName: 'id' })
-  patientData: UsersEntity;
+  patient: UsersEntity;
 }
