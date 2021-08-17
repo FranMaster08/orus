@@ -19,18 +19,18 @@ export class MedicalHistoryService {
   async createMedicalHistory(
     data: CreateMedicalHistoryDto,
   ): Promise<MedicalHistoryEntity> {
-    if (
-      await this.medicalHistoryRepository.findOne({
-        where: {
-          patientId: data.patientId,
-          doctorId: data.doctorId,
-        },
-      })
-    ) {
-      throw new ConflictException(
-        'There is already a medical history of this patient with this doctor.',
-      );
-    }
+    // if (
+    //   await this.medicalHistoryRepository.findOne({
+    //     where: {
+    //       patientId: data.patientId,
+    //       doctorId: data.doctorId,
+    //     },
+    //   })
+    // ) {
+    //   throw new ConflictException(
+    //     'There is already a medical history of this patient with this doctor.',
+    //   );
+    // }
 
     const newMedicalHistory = new MedicalHistoryEntity();
     newMedicalHistory.doctorId = data.doctorId;

@@ -1,6 +1,7 @@
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { IPatient } from 'src/shared/interfaces/patients.interfaces';
+import { IMedicalHistory } from '../../shared/interfaces/medical-history.interfaces';
+import { IPatient } from '../../shared/interfaces/patients.interfaces';
 import { PatientsService } from '../services/patients.service';
 
 @Controller('patients')
@@ -16,5 +17,10 @@ export class PatientsController {
   @Get(':id')
   async getPatient(@Param('id') id: string): Promise<IPatient> {
     return await this.patientsService.getPatientById(id);
+  }
+
+  @Get(':id/medical-history')
+  async getMedicalHistory(@Param('id') id: string): Promise<IMedicalHistory[]> {
+    return await this.patientsService.getMedicalHistory(id);
   }
 }
