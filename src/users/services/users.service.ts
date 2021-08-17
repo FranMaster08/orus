@@ -2,14 +2,12 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UsersEntity } from '../entities/users.entity';
-import { EspecialidadesServive } from '../../shared/especialidades.service';
 import { CreateUsuariosDto } from '../dto/createUsuarios.dto';
 import { compare, hash } from 'bcryptjs';
 
 @Injectable()
 export class UsuariosService {
   constructor(
-    private readonly especialidadesService: EspecialidadesServive,
     @InjectRepository(UsersEntity, 'thv-db')
     private usuariosRepository: Repository<UsersEntity>,
   ) {}

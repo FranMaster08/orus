@@ -1,36 +1,49 @@
-import { IsArray, IsJSON, IsNotEmpty, IsObject, IsString } from 'class-validator';
-
-interface Files {
-  profile_picture: string;
-}
-
-interface ProfessionalBackgroud {
-  experience: string[];
-  academic_studies: string[];
-}
+import { Type } from 'class-transformer';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsInstance,
+  IsNotEmpty,
+  IsObject,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import {
+  IFiles,
+  IProfessionalBackgroud,
+  IScheduleDay,
+} from '../../shared/interfaces/doctor.interfaces';
+import { DtoScheduleDay } from './schedule-day.dto';
 
 export class CreateDoctorDto {
   @IsNotEmpty()
   @IsString()
-  id: string;
+  readonly id: string;
 
   @IsObject()
-  files: Files;
+  readonly files: IFiles;
 
   @IsObject()
-  professional_backgroud: ProfessionalBackgroud;
+  readonly professional_backgroud: IProfessionalBackgroud;
 
   @IsNotEmpty()
   @IsString()
-  specialty: string;
+  readonly specialty: string;
 
   @IsNotEmpty()
   @IsString()
-  collegiate_number: string;
+  readonly collegiate_number: string;
 
   @IsArray()
-  consultation_rooms: string[]
+  readonly consultation_rooms: string[];
 
   @IsArray()
-  insurance_companies: string[]
+  readonly insurance_companies: string[];
+
+  @Type(() => DtoScheduleDay)
+  @ValidateNested({ each: true })
+  @IsInstance(DtoScheduleDay, { each: true })
+  @IsArray()
+  @ArrayNotEmpty()
+  readonly schedule: IScheduleDay[];
 }

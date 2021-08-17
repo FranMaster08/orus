@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateDoctorDto } from '../dto/create-doctor.dto';
 import { DoctorsEntity } from '../entities/doctors.entity';
@@ -14,5 +14,10 @@ export class DoctorsController {
     @Body() doctorDetails: CreateDoctorDto,
   ): Promise<DoctorsEntity> {
     return await this.doctorsService.createDoctor(doctorDetails);
+  }
+
+  @Get(':id/schedule')
+  async getSchedule(@Param('id') id: string) {
+    return await this.doctorsService.getSchedule(id);
   }
 }

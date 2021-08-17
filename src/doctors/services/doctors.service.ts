@@ -1,4 +1,9 @@
-import { ConflictException, HttpException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  HttpException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateDoctorDto } from '../dto/create-doctor.dto';
@@ -12,6 +17,8 @@ export class DoctorsService {
   ) {}
 
   async createDoctor(doctorDetails: CreateDoctorDto): Promise<DoctorsEntity> {
+    // TODO: antes de crear un doctor, verificar si existe como usuario... pues el mismo id del user es el del doctor
+
     const exist = await this.doctorsRepository.count({ id: doctorDetails.id });
 
     if (exist) {
@@ -32,9 +39,20 @@ export class DoctorsService {
     newDoctor.insurance_companies = JSON.stringify(
       doctorDetails.insurance_companies,
     );
+    newDoctor.schedule = JSON.stringify(doctorDetails.schedule);
 
     const saveDoctor = await this.doctorsRepository.save(newDoctor);
 
     return saveDoctor;
+  }
+
+  async getSchedule(id) {
+    const doctor = await this.doctorsRepository.findOne(id);
+
+    if (!doctor) {
+      throw new NotFoundException('Doctor does not exist');
+    }
+
+    return JSON.parse(doctor.schedule);
   }
 }
