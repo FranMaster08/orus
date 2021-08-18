@@ -1,12 +1,13 @@
 import {
   ConflictException,
-  HttpException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IScheduleDay } from 'src/shared/interfaces/doctor.interfaces';
 import { Repository } from 'typeorm';
 import { CreateDoctorDto } from '../dto/create-doctor.dto';
+import { DtoScheduleDay } from '../dto/schedule-day.dto';
 import { DoctorsEntity } from '../entities/doctors.entity';
 
 @Injectable()
@@ -46,7 +47,7 @@ export class DoctorsService {
     return saveDoctor;
   }
 
-  async getSchedule(id) {
+  async getSchedule(id: string) {
     const doctor = await this.doctorsRepository.findOne(id);
 
     if (!doctor) {
@@ -54,5 +55,28 @@ export class DoctorsService {
     }
 
     return JSON.parse(doctor.schedule);
+  }
+
+  async updateSchedule(id: string, schedule: DtoScheduleDay) {
+    const doctor = await this.doctorsRepository.findOne(id);
+
+    if (!doctor) {
+      throw new NotFoundException('Doctor does not exist');
+    }
+
+    const doctorSchedule: IScheduleDay[] = JSON.parse(doctor.schedule).map(
+      (schedule_) => {
+        if (schedule_.day === schedule.day) {
+          return schedule;
+        }
+        return schedule_;
+      },
+    );
+
+    await this.doctorsRepository.update(id, {
+      schedule: JSON.stringify(doctorSchedule),
+    });
+
+    return doctorSchedule;
   }
 }
