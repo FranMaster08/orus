@@ -1,5 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { CreateUsuariosDto } from '../../users/dto/createUsuarios.dto';
+import { CreateUserDto } from '../../users/dto/createUsuarios.dto';
 import { UsersEntity } from '../../users/entities/users.entity';
 import { UsuariosService } from '../../users/services/users.service';
 import { LoginCredentialsDto } from '../dto/LoginCredentialsDto';
@@ -14,7 +14,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signup(user: CreateUsuariosDto): Promise<UsersEntity> {
+  async signup(user: CreateUserDto): Promise<UsersEntity> {
     return this.usuariosService.crearUsuario(user);
   }
 

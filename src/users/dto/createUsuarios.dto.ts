@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import {
   IsDateString,
   IsEmail,
@@ -9,7 +10,7 @@ import {
 import { RoleType } from '../../role/roletype.enum';
 import { GenderType } from '../enum/gender.enum';
 
-export class CreateUsuariosDto {
+export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   readonly firstName: string;
@@ -20,6 +21,11 @@ export class CreateUsuariosDto {
   @IsNotEmpty()
   @IsEmail()
   readonly email: string;
+
+  @IsNotEmpty()
+  @Transform(({ value }) => (value ? value.trim() : value))
+  @IsString()
+  readonly dni: string;
 
   @IsNotEmpty()
   @IsString()
