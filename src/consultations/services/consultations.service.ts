@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RoleType } from '../../role/roletype.enum';
 import { Repository } from 'typeorm';
-import * as moment from 'moment';
+// import * as moment from 'moment';
 import { CancelConsultationDto } from '../dto/cancel-consultation.dto';
 import { CreateConsultationDto } from '../dto/create-consultation.dto';
 import { RescheduleConsultationDto } from '../dto/reschedule-consultation.dto';
@@ -63,7 +63,7 @@ export class ConsultationsService {
 
       consultations = consultations.map((consultation) => ({
         id: consultation.id,
-        date: moment(consultation.date).utc(true).toDate(),
+        date: consultation.date,
         status: consultation.status,
         type: consultation.type,
         patient: consultation.patient,
@@ -140,7 +140,7 @@ export class ConsultationsService {
     id: string,
     data: RescheduleConsultationDto,
     user_rol: RoleType.PATIENT | RoleType.DOCTOR,
-  ): Promise<ConsultationsEntity> {
+  ): Promise<IConsultation> {
     this.logger.log(
       `BEGIN [${this.rescheduleConsultation.name}] Params[id: string = ${id}]`,
     );

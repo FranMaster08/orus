@@ -85,7 +85,7 @@ export class ConsultationsController {
   async rescheduleConsultationDoctor(
     @Param('id') id: string,
     @Body() data: RescheduleConsultationDto,
-  ): Promise<ConsultationsEntity> {
+  ): Promise<IConsultation> {
     return await this.consultationsService.rescheduleConsultation(
       id,
       data,
@@ -97,7 +97,7 @@ export class ConsultationsController {
   async rescheduleConsultationPatient(
     @Param('id') id: string,
     @Body() data: RescheduleConsultationDto,
-  ): Promise<ConsultationsEntity> {
+  ): Promise<IConsultation> {
     return await this.consultationsService.rescheduleConsultation(
       id,
       data,
