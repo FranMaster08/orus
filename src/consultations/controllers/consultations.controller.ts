@@ -8,7 +8,7 @@ import {
   Get,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { IConsultation } from 'src/shared/interfaces/consultations.interfaces';
+import { IConsultation } from '../../shared/interfaces/consultations.interfaces';
 import { RoleType } from '../../role/roletype.enum';
 import { CancelConsultationDto } from '../dto/cancel-consultation.dto';
 import { CreateConsultationDto } from '../dto/create-consultation.dto';

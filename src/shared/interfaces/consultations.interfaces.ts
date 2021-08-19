@@ -3,8 +3,12 @@ import { ConsultationsType } from '../../consultations/enum/consultations-type.e
 import { IPatient } from './patients.interfaces';
 
 export interface IConsultation {
+  id: string;
   date: Date;
   status: ConsultationsStatus;
   type: ConsultationsType;
-  patient?: IPatient;
+  patient: IPatient;
+  observations: string;
 }
+
+

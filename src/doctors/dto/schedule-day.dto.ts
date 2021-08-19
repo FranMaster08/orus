@@ -5,7 +5,7 @@ import {
   IsNumber,
   IsString,
 } from 'class-validator';
-import { Day } from 'src/shared/enum/day.enum';
+import { Day } from '../../shared/enum/day.enum';
 
 export class DtoScheduleDay {
   @IsEnum(Day)

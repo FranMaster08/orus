@@ -1,4 +1,4 @@
-import { UsersEntity } from 'src/users/entities/users.entity';
+import { UsersEntity } from '../../users/entities/users.entity';
 import {
   Column,
   CreateDateColumn,
@@ -38,7 +38,7 @@ export class ConsultationsEntity {
   @Column({ name: 'family_id' })
   family_id: string;
 
-  @Column()
+  @Column({ type: 'datetime' })
   date: Date;
 
   @Column()

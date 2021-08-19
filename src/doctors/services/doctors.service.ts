@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IScheduleDay } from 'src/shared/interfaces/doctor.interfaces';
+import { IScheduleDay } from '../../shared/interfaces/doctor.interfaces';
 import { Repository } from 'typeorm';
 import { CreateDoctorDto } from '../dto/create-doctor.dto';
 import { DtoScheduleDay } from '../dto/schedule-day.dto';

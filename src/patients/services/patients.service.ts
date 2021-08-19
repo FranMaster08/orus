@@ -20,7 +20,8 @@ export class PatientsService {
 
   async getPatients(): Promise<IPatient[]> {
     const patientsFind = await this.usersRepository.find({
-      role: RoleType.PATIENT,
+      where: { role: RoleType.PATIENT },
+      order: { firstName: 'ASC' },
     });
 
     const patients: IPatient[] = patientsFind.map((user) => {

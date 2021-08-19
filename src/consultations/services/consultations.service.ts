@@ -2,13 +2,14 @@ import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RoleType } from '../../role/roletype.enum';
 import { Repository } from 'typeorm';
+import * as moment from 'moment';
 import { CancelConsultationDto } from '../dto/cancel-consultation.dto';
 import { CreateConsultationDto } from '../dto/create-consultation.dto';
 import { RescheduleConsultationDto } from '../dto/reschedule-consultation.dto';
 import { UpdateConsultationDto } from '../dto/update-consultation.dto';
 import { ConsultationsEntity } from '../entities/consultations.entity';
 import { ConsultationsStatus } from '../enum/consultations-status.enum';
-import { IConsultation } from 'src/shared/interfaces/consultations.interfaces';
+import { IConsultation } from '../../shared/interfaces/consultations.interfaces';
 
 @Injectable()
 export class ConsultationsService {
@@ -35,9 +36,15 @@ export class ConsultationsService {
     newConsultation.prescriptions = JSON.stringify(data.prescriptions);
     newConsultation.exams = JSON.stringify(data.exams);
 
-    const saveConsultation = this.consultationsRepository.save(newConsultation);
+    const saveConsultation = await this.consultationsRepository.save(
+      newConsultation,
+    );
+    const getConsultation = await this.consultationsRepository.findOne(
+      saveConsultation.id,
+      { relations: ['patient'] },
+    );
 
-    return saveConsultation;
+    return getConsultation;
 
     // TODO: enviar mail creada exitosamente la consulta
     // TODO: verificar si hay una consulta para esa misma fecha y horario
@@ -48,8 +55,20 @@ export class ConsultationsService {
     let consultations: IConsultation[];
     if (role === RoleType.DOCTOR) {
       consultations = await this.consultationsRepository.find({
-        where: { doctorId: id }, relations: ['patient']
+        select: ['id', 'date', 'status', 'type', 'observations'],
+        where: { doctorId: id },
+        relations: ['patient'],
+        order: { date: 'ASC' },
       });
+
+      consultations = consultations.map((consultation) => ({
+        id: consultation.id,
+        date: moment(consultation.date).utc(true).toDate(),
+        status: consultation.status,
+        type: consultation.type,
+        patient: consultation.patient,
+        observations: consultation.observations,
+      }));
     } else if (role === RoleType.PATIENT) {
       consultations = await this.consultationsRepository.find({
         where: { patientId: id },
@@ -57,8 +76,6 @@ export class ConsultationsService {
     } else if (role === RoleType.ADMIN) {
       consultations = await this.consultationsRepository.find();
     }
-
-    
 
     return consultations;
   }
