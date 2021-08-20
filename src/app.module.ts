@@ -15,6 +15,7 @@ import { MedicalHistoryEntity } from './medicalHistory/entities/medical-history.
 import { MedicalHistoryModule } from './medicalHistory/medical-history.module';
 import { PatientsModule } from './patients/patients.module';
 import { FilesModule } from './files/files.module';
+import { FilesEntity } from './files/entities/files.entity';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { FilesModule } from './files/files.module';
         DoctorsEntity,
         ConsultationsEntity,
         MedicalHistoryEntity,
+        FilesEntity,
       ],
     }),
     // ConfigModule,

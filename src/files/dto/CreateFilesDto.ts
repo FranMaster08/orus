@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
   IsEnum,
@@ -6,21 +6,9 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { RoleType } from '../../role/roletype.enum';
-import { FileExtension, FileType } from '../enum/files.enum';
-
+import { FileExtension, FileContext } from '../enum/files.enum';
 
 class FileDto {
-  @IsEnum(FileType)
-  readonly type: FileType;
-
-  @IsEnum(RoleType)
-  readonly role: RoleType;
-
-  @IsString()
-  @IsNotEmpty()
-  readonly userId: string;
-
   @IsEnum(FileExtension)
   readonly extension: FileExtension;
 
@@ -30,6 +18,22 @@ class FileDto {
 }
 
 export class CreateFilesDto {
+  @IsNotEmpty()
+  @Transform(({ value }) => (value ? value.trim() : value))
+  @IsString()
+  readonly patientId: string;
+
+  @IsNotEmpty()
+  @Transform(({ value }) => (value ? value.trim() : value))
+  @IsString()
+  readonly doctorId: string;
+
+  @IsEnum(FileContext)
+  readonly context: FileContext;
+
+  @IsString()
+  readonly consultationId: string;
+
   @ValidateNested({ each: true })
   @Type(() => FileDto)
   @IsArray()

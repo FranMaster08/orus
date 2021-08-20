@@ -1,5 +1,7 @@
-export enum FileType {
+export enum FileContext {
   MEDICAL_HISTORY = 'MEDICAL_HISTORY',
+  CONSULTATION = 'CONSULTATION',
+  CHAT = 'CHAT',
 }
 
 export enum FileExtension {
