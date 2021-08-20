@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
+import { urlencoded, json } from 'body-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,7 +16,10 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(5005);
+  app.use(json({ limit: '50mb' }));
+  app.use(urlencoded({ limit: '50mb', extended: true }));
+
+  await app.listen(process.env.PORT);
   console.log(`Application is running on: ${await app.getUrl()}`);
   console.log();
 }

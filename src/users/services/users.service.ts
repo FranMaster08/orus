@@ -55,6 +55,5 @@ export class UsuariosService {
 
   async getUsuarios(): Promise<void> {
     const usuarios = await this.usuariosRepository.find();
-    console.log('getUsuarios :>> ', usuarios);
   }
 }
