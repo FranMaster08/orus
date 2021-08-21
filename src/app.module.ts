@@ -16,6 +16,7 @@ import { MedicalHistoryModule } from './medicalHistory/medical-history.module';
 import { PatientsModule } from './patients/patients.module';
 import { FilesModule } from './files/files.module';
 import { FilesEntity } from './files/entities/files.entity';
+import { NotifyModule } from './notify/notity.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { FilesEntity } from './files/entities/files.entity';
     MedicalHistoryModule,
     PatientsModule,
     FilesModule,
+    NotifyModule
   ],
 })
 export class AppModule {}

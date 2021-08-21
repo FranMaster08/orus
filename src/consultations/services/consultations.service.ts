@@ -10,6 +10,7 @@ import { UpdateConsultationDto } from '../dto/update-consultation.dto';
 import { ConsultationsEntity } from '../entities/consultations.entity';
 import { ConsultationsStatus } from '../enum/consultations-status.enum';
 import { IConsultation } from '../../shared/interfaces/consultations.interfaces';
+import { NotifyService } from 'src/notify/services/notify.service';
 
 @Injectable()
 export class ConsultationsService {
@@ -18,6 +19,7 @@ export class ConsultationsService {
   constructor(
     @InjectRepository(ConsultationsEntity, 'thv-db')
     private readonly consultationsRepository: Repository<ConsultationsEntity>,
+    private readonly notifyService: NotifyService,
   ) {}
 
   async createConsultation(
@@ -43,6 +45,9 @@ export class ConsultationsService {
       saveConsultation.id,
       { relations: ['patient'] },
     );
+
+    // le saque el async para que no se tardara tanto en la respuesta
+    this.notifyService.notifyConsultationAtendded();
 
     return getConsultation;
 

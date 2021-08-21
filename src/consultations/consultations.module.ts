@@ -3,10 +3,11 @@ import { ConsultationsService } from './services/consultations.service';
 import { ConsultationsController } from './controllers/consultations.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConsultationsEntity } from './entities/consultations.entity';
+import { NotifyService } from '../notify/services/notify.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ConsultationsEntity], 'thv-db')],
-  providers: [ConsultationsService],
-  controllers: [ConsultationsController]
+  providers: [ConsultationsService, NotifyService],
+  controllers: [ConsultationsController],
 })
 export class ConsultationsModule {}
