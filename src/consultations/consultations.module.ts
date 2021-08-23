@@ -9,5 +9,6 @@ import { NotifyService } from '../notify/services/notify.service';
   imports: [TypeOrmModule.forFeature([ConsultationsEntity], 'thv-db')],
   providers: [ConsultationsService, NotifyService],
   controllers: [ConsultationsController],
+  exports: [ConsultationsService]
 })
 export class ConsultationsModule {}

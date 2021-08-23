@@ -1,14 +1,36 @@
-import { IsArray, IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { ConsultationsStatus } from '../enum/consultations-status.enum';
+import { Transform, Type } from 'class-transformer';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+
+class QuoteDto {
+  @IsNotEmpty()
+  @Transform(({ value }) => (value ? value.trim() : value))
+  @IsString()
+  service: string;
+
+  @IsNumber()
+  cost: number;
+}
 
 export class UpdateConsultationDto {
-  @IsNotEmpty()
+  @ArrayNotEmpty()
   @IsArray()
-  observations: [];
+  readonly observations: [];
 
   @IsArray()
-  prescriptions: [];
+  readonly prescriptions: [];
 
   @IsArray()
-  exams: [];
+  readonly exams: [];
+
+  @ValidateNested({ each: true })
+  @Type(() => QuoteDto)
+  @IsArray()
+  readonly quote: QuoteDto[];
 }

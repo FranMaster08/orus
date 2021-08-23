@@ -1,5 +1,7 @@
 import {
   ConflictException,
+  forwardRef,
+  Inject,
   Injectable,
   Logger,
   NotFoundException,
@@ -9,9 +11,11 @@ import { Repository } from 'typeorm';
 import { CreateFilesDto } from '../dto/CreateFilesDto';
 import { FilesEntity } from '../entities/files.entity';
 import { v4 as uuidv4 } from 'uuid';
-import * as fs from 'fs';
 import { IFilesDB, IUrlFiles } from '../../shared/interfaces/files.interfaces';
 import { FileExtension } from '../enum/files.enum';
+import { ConsultationsService } from 'src/consultations/services/consultations.service';
+import * as fs from 'fs';
+import * as htmlPDF from 'html-pdf';
 
 @Injectable()
 export class FilesService {
@@ -20,6 +24,8 @@ export class FilesService {
   constructor(
     @InjectRepository(FilesEntity, 'thv-db')
     private readonly filesRepository: Repository<FilesEntity>,
+    // @Inject(forwardRef(() => ConsultationsService))
+    private readonly consultationsServive: ConsultationsService,
   ) {}
 
   async uploadFilesToDirectory(files: CreateFilesDto) {
@@ -110,5 +116,29 @@ export class FilesService {
     });
 
     return attachedFiles;
+  }
+
+  async getReportByConsultationId(consultationId: string) {
+    const consultation = await this.consultationsServive.findOne(
+      consultationId,
+    );
+
+    const html = fs.readFileSync('./report.html', 'utf8');
+    const options: htmlPDF.CreateOptions = { format: 'Letter' };
+
+    htmlPDF.create(html, options).toFile('./foo2.pdf', function (err, res) {
+      if (err) return console.log(err);
+      console.log(res); // { filename: '/app/businesscard.pdf' }
+    });
+
+    // htmlPDF.create(html).toStream(function (err, stream) {
+    //   stream.pipe(fs.createWriteStream('./foo2.pdf'));
+    // });
+
+    // htmlPDF.create(html).toBuffer(function(err, buffer){
+    //   console.log('This is a buffer:', Buffer.isBuffer(buffer));
+    // });
+
+    return 1;
   }
 }

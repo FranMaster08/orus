@@ -50,6 +50,9 @@ export class ConsultationsEntity {
   @Column()
   exams: string;
 
+  @Column()
+  quote: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

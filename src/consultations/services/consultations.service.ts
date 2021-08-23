@@ -1,4 +1,10 @@
-import { Injectable, NotFoundException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  Logger,
+  Inject,
+  forwardRef,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RoleType } from '../../role/roletype.enum';
 import { Repository } from 'typeorm';
@@ -19,6 +25,7 @@ export class ConsultationsService {
   constructor(
     @InjectRepository(ConsultationsEntity, 'thv-db')
     private readonly consultationsRepository: Repository<ConsultationsEntity>,
+    // @Inject(forwardRef(() => NotifyService))
     private readonly notifyService: NotifyService,
   ) {}
 
@@ -37,6 +44,7 @@ export class ConsultationsService {
     newConsultation.observations = JSON.stringify(data.observations);
     newConsultation.prescriptions = JSON.stringify(data.prescriptions);
     newConsultation.exams = JSON.stringify(data.exams);
+    newConsultation.quote = JSON.stringify(data.quote);
 
     const saveConsultation = await this.consultationsRepository.save(
       newConsultation,
@@ -102,6 +110,7 @@ export class ConsultationsService {
       observations: JSON.stringify(data.observations),
       prescriptions: JSON.stringify(data.prescriptions),
       exams: JSON.stringify(data.exams),
+      quote: JSON.stringify(data.quote),
     });
 
     return await this.consultationsRepository.findOne(id);
@@ -164,5 +173,13 @@ export class ConsultationsService {
 
     // TODO: se crea informe PDF
     // TODO: se envia email con informe PDF
+  }
+
+  async findOne(id: string): Promise<ConsultationsEntity> {
+    const consultation = await this.consultationsRepository.findOne(id);
+    if (!consultation) {
+      throw new NotFoundException('Medical consultation not found');
+    }
+    return consultation;
   }
 }

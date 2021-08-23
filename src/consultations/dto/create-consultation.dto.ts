@@ -11,35 +11,38 @@ import { ConsultationsType } from '../enum/consultations-type.enum';
 export class CreateConsultationDto {
   @IsNotEmpty()
   @IsString()
-  doctorId: string;
+  readonly doctorId: string;
 
   @IsNotEmpty()
   @IsString()
-  patientId: string;
+  readonly patientId: string;
 
   @IsNotEmpty()
   @IsString()
   @IsEnum(ConsultationsStatus)
-  status: ConsultationsStatus;
+  readonly status: ConsultationsStatus;
 
   @IsNotEmpty()
   @IsString()
   @IsEnum(ConsultationsType)
-  type: ConsultationsType;
+  readonly type: ConsultationsType;
 
   @IsString()
   familyId: string;
 
   @IsNotEmpty()
   @IsDateString()
-  date: Date;
+  readonly date: Date;
 
   @IsArray()
-  observations: any; // TODO: crear tipo como corresponde
+  readonly observations: []; // TODO: crear tipo como corresponde, DTO, para que valide los internos, y una UNA INTERFAZ
 
   @IsArray()
-  prescriptions: any; // TODO: crear tipo como corresponde
+  readonly prescriptions: []; // TODO: crear tipo como corresponde, DTO, para que valide los internos, y una UNA INTERFAZ
 
   @IsArray()
-  exams: any; // TODO: crear tipo como corresponde
+  readonly exams: []; // TODO: crear tipo como corresponde, DTO, para que valide los internos, y una UNA INTERFAZghgh
+
+  @IsArray()
+  readonly quote: []; // AQUI UNA INTERFAZ, o el DTO,, ya lo cree en uptate dto
 }

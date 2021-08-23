@@ -45,6 +45,12 @@ export class FilesController {
 
     res.sendFile(path_);
   }
+  @Get('consultations/:id/report')
+  async getReportByConsultationId(@Param('id') consultationId: string) {
+    return await this.filesService.getReportByConsultationId(
+      consultationId,
+    );
+  }
 }
 
 // convertir en imagen

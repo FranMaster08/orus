@@ -1,0 +1,205 @@
+<html>
+  <head>
+    <meta charset="utf8" />
+    <title>Report</title>
+    <style>
+      /*
+      Tamaños utilizados en EEUU
+      Formato	Medida
+      Carta	216 x 279 mm
+      Legal	216 x 356 mm
+      Tabloide	279 x 432 mm
+      */
+      body,
+      table,
+      th,
+      td {
+        font-size: 13px;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 5px;
+        text-align: left;
+      }
+
+      .into-evaluation {
+        padding-left: 15;
+      }
+
+      .head-report {
+        height: 22mm;
+        background-color: red;
+      }
+      .head-report-title {
+        width: 50%;
+        float: left;
+      }
+      .head-report-transmitter {
+        width: 50%;
+        float: left;
+        font-size: 11px;
+      }
+      /* Carta	157.8mm x 279? mm */
+      .head-report-patient {
+        height: 22mm;
+        background-color: blue;
+      }
+      .head-report-title-patient {
+        width: 31mm;
+        float: left;
+        background-color: blueviolet;
+      }
+      .head-report-transmitter-patient {
+        width: 126.6mm;
+        float: left;
+        background-color: cadetblue;
+        font-size: 11px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="pageHeader">Default header</div>
+    <div id="pageHeader-first">Header on first page</div>
+    <div id="pageHeader-2">Header on second page</div>
+    <div id="pageHeader-3">Header on third page</div>
+    <div id="pageHeader-last">Header on last page</div>
+
+    <div class="head-report">
+      <div class="head-report-title">
+        <div><strong>Informe clínico</strong></div>
+        <div><small>Privado y confidencial</small></div>
+      </div>
+      <div class="head-report-transmitter">
+        Dr. David Ochoa Bermudez. <br />
+        Especialista en ginecostetra basica general. <br />
+        Número colegiado: 1011212 <br />
+        País: Chile <br />
+        Consultorio: Clinica bupa 620, 528-A
+      </div>
+    </div>
+
+    <div style="height: 5; background-color: coral"></div>
+
+    <div class="head-report-patient">
+      <div class="head-report-title-patient">
+        <h4>Paciente</h4>
+      </div>
+      <div class="head-report-transmitter-patient">
+        <table>
+          <tr>
+            <th>Nombre</th>
+            <td>Brayan David Ochoa Bermudez</td>
+          </tr>
+          <tr>
+            <th>Genero</th>
+            <td>Masculino</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div style="height: 5; background-color: coral"></div>
+
+    <div class="head-report-patient">
+      <div class="head-report-title-patient">
+        <h4>Evaluacion clínica</h4>
+      </div>
+      <div class="head-report-transmitter-patient">
+        <table>
+          <tr>
+            <th>CIE-10</th>
+            <td>xsaxaaads ffdsfsf sfaf sfsfs fdsf</td>
+          </tr>
+          <tr>
+            <th>Observaciones</th>
+            <td>
+              s sdafds fasf dsfdsf sfsd fdsfdasfsdfsdf ds fads dsfdsfsd fdsfds
+              fafdsfds
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div style="height: 5; background-color: coral"></div>
+
+    <div class="head-report-patient">
+      <div class="head-report-title-patient">
+        <h4>Recetas</h4>
+      </div>
+      <div class="head-report-transmitter-patient">
+        <table>
+          <tr>
+            <th>CIE-10</th>
+            <td>xsaxaaads ffdsfsf sfaf sfsfs fdsf</td>
+          </tr>
+          <tr>
+            <th>Observaciones</th>
+            <td>
+              s sdafds fasf dsfdsf sfsd fdsfdasfsdfsdf ds fads dsfdsfsd fdsfds
+              fafdsfds
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div style="height: 5; background-color: coral"></div>
+
+    <div class="head-report-patient">
+      <div class="head-report-title-patient">
+        <h4>Exámenes</h4>
+      </div>
+      <div class="head-report-transmitter-patient">
+        <table>
+          <tr>
+            <th>CIE-10</th>
+            <td>xsaxaaads ffdsfsf sfaf sfsfs fdsf</td>
+          </tr>
+          <tr>
+            <th>Observaciones</th>
+            <td>
+              s sdafds fasf dsfdsf sfsd fdsfdasfsdfsdf ds fads dsfdsfsd fdsfds
+              fafdsfds
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div style="height: 5; background-color: coral"></div>
+
+    <div class="head-report-patient">
+      <div class="head-report-title-patient">
+        <h4>Cotización</h4>
+      </div>
+      <div class="head-report-transmitter-patient">
+        <table>
+          <tr>
+            <th>CIE-10</th>
+            <td>xsaxaaads ffdsfsf sfaf sfsfs fdsf</td>
+          </tr>
+          <tr>
+            <th>Observaciones</th>
+            <td>
+              s sdafds fasf dsfdsf sfsd fdsfdasfsdfsdf ds fads dsfdsfsd fdsfds
+              fafdsfds
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div id="pageFooter">Default footer</div>
+    <div id="pageFooter-first">Footer on first page</div>
+    <div id="pageFooter-2">Footer on second page</div>
+    <div id="pageFooter-last">Footer on last page</div>
+  </body>
+</html>

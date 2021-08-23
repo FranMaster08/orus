@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Inject, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 // import { ConfigModule } from './config/config.module';
@@ -44,6 +44,7 @@ import { NotifyModule } from './notify/notity.module';
     AuthModule,
     DoctorsModule,
     ConsultationsModule,
+    // forwardRef(() => ConsultationsModule),
     MedicalHistoryModule,
     PatientsModule,
     FilesModule,
