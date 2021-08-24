@@ -23,11 +23,13 @@ export class FilesController {
 
   constructor(private readonly filesService: FilesService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   async uploadFilesToDirectory(@Body() files: CreateFilesDto) {
     return await this.filesService.uploadFilesToDirectory(files);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get('consultations/:id')
   async getAttachedFilesByConsultationId(@Param('id') consultationId: string) {
     return await this.filesService.getAttachedFilesByConsultationId(
@@ -45,11 +47,11 @@ export class FilesController {
 
     res.sendFile(path_);
   }
+
+  @UseGuards(AuthGuard('jwt'))
   @Get('consultations/:id/report')
-  async getReportByConsultationId(@Param('id') consultationId: string) {
-    return await this.filesService.getReportByConsultationId(
-      consultationId,
-    );
+  async getReportByConsultationId(@Param('id') consultationId: string, @Res() res: any) {
+    return await this.filesService.getReportByConsultationId(consultationId, res);
   }
 }
 

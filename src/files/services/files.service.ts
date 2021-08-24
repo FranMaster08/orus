@@ -16,6 +16,9 @@ import { FileExtension } from '../enum/files.enum';
 import { ConsultationsService } from 'src/consultations/services/consultations.service';
 import * as fs from 'fs';
 import * as htmlPDF from 'html-pdf';
+import { GenderType } from 'src/users/enum/gender.enum';
+import 'moment/locale/es';
+import * as moment from 'moment';
 
 @Injectable()
 export class FilesService {
@@ -118,18 +121,71 @@ export class FilesService {
     return attachedFiles;
   }
 
-  async getReportByConsultationId(consultationId: string) {
+  async getReportByConsultationId(consultationId: string, res: any) {
     const consultation = await this.consultationsServive.findOne(
       consultationId,
     );
 
-    const html = fs.readFileSync('./report.html', 'utf8');
-    const options: htmlPDF.CreateOptions = { format: 'Letter' };
+    console.log(`consultation`, consultation);
 
-    htmlPDF.create(html, options).toFile('./foo2.pdf', function (err, res) {
-      if (err) return console.log(err);
-      console.log(res); // { filename: '/app/businesscard.pdf' }
-    });
+    let html = fs.readFileSync('./report.html', 'utf8');
+
+    // PATIENT
+    html = html.replace('{{patientDni}}', consultation.patient.dni);
+    html = html.replace(
+      '{{patientName}}',
+      `${consultation.patient.firstName} ${consultation.patient.lastName}`,
+    );
+    html = html.replace(
+      '{{patientGender}}',
+      consultation.patient.gender === GenderType.FELAME
+        ? 'Femenino'
+        : 'Masculino',
+    );
+    html = html.replace(
+      '{{patientBirthDate}}',
+      moment(consultation.patient.birthDate).format('D [de] MMMM [del] YYYY'),
+    );
+
+    // DOCTOR
+    html = html.replace(
+      '{{doctorName}}',
+      `${consultation.doctor.firstName} ${consultation.doctor.lastName}`,
+    );
+    html = html.replace(
+      '{{doctorCollegiateNumber}}',
+      consultation.doctorDetail.collegiate_number,
+    );
+    html = html.replace(
+      '{{doctorSpecialty}}',
+      consultation.doctorDetail.specialty,
+    );
+
+    // CONSULTATION
+    html = html.replace(
+      '{{consultationDate}}',
+      moment(consultation.date).format('D [de] MMMM [del] YYYY'),
+    );
+
+    const options: htmlPDF.CreateOptions = {
+      format: 'Letter',
+      type: 'pdf',
+      // width: '50mm',
+      // height: '90mm',
+    };
+
+    htmlPDF
+      .create(html, options)
+      .toStream((err, stream) => {
+        if (err) return res.end(err.stack);
+        res.setHeader('Content-type', 'application/pdf');
+        stream.pipe(res);
+      });
+
+    // htmlPDF.create(html, options).toFile('./foo2.pdf', function (err, res) {
+    //   if (err) return console.log(err);
+    //   console.log(res); // { filename: '/app/businesscard.pdf' }
+    // });
 
     // htmlPDF.create(html).toStream(function (err, stream) {
     //   stream.pipe(fs.createWriteStream('./foo2.pdf'));

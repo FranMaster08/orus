@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { ConsultationsStatus } from '../enum/consultations-status.enum';
 import { ConsultationsType } from '../enum/consultations-type.enum';
+import { DoctorsEntity } from 'src/doctors/entities/doctors.entity';
 
 @Entity('consultations')
 export class ConsultationsEntity {
@@ -62,4 +63,12 @@ export class ConsultationsEntity {
   @ManyToOne(() => UsersEntity, { cascade: false, nullable: false })
   @JoinColumn({ name: 'patient_id', referencedColumnName: 'id' })
   patient: UsersEntity;
+
+  @ManyToOne(() => UsersEntity, { cascade: false, nullable: false })
+  @JoinColumn({ name: 'doctor_id', referencedColumnName: 'id' })
+  doctor: UsersEntity;
+
+  @ManyToOne(() => DoctorsEntity, { cascade: false, nullable: false })
+  @JoinColumn({ name: 'doctor_id', referencedColumnName: 'id' })
+  doctorDetail: DoctorsEntity;
 }

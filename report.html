@@ -10,196 +10,237 @@
       Legal	216 x 356 mm
       Tabloide	279 x 432 mm
       */
+      /* Carta	157.8mm x 279? mm */
+
       body,
       table,
       th,
       td {
-        font-size: 13px;
+        font-size: 11px;
+        vertical-align: top;
       }
 
       table,
       th,
       td {
-        border: 1px solid black;
+        border: 0px solid black;
         border-collapse: collapse;
       }
+
       th,
       td {
         padding: 5px;
         text-align: left;
       }
 
-      .into-evaluation {
-        padding-left: 15;
+      .title-report-principal {
+        color: #1466d6;
+        font-weight: 600;
+        font-size: 16;
+      }
+      .titles {
+        color: #1466d6;
+        font-weight: 600;
       }
 
-      .head-report {
-        height: 22mm;
-        background-color: red;
+      .body-report {
+        border: 1 solid #2d2d2d;
+        border-bottom: 0;
       }
-      .head-report-title {
-        width: 50%;
-        float: left;
+      .body-report-end {
+        border-bottom: 1 solid #2d2d2d;
       }
-      .head-report-transmitter {
-        width: 50%;
-        float: left;
-        font-size: 11px;
+
+      .head-report-col-1 {
+        width: 78mm;
+        display: inline-block;
+        vertical-align: top;
       }
-      /* Carta	157.8mm x 279? mm */
-      .head-report-patient {
-        height: 22mm;
-        background-color: blue;
+      .head-report-col-2 {
+        width: 78mm;
+        display: inline-block;
+        vertical-align: top;
       }
-      .head-report-title-patient {
-        width: 31mm;
-        float: left;
-        background-color: blueviolet;
+
+      .body-report-col-1 {
+        width: 16mm;
+        display: inline-block;
+        vertical-align: top;
+        padding: 10 0 5 5;
+        border: 0;
       }
-      .head-report-transmitter-patient {
-        width: 126.6mm;
-        float: left;
-        background-color: cadetblue;
-        font-size: 11px;
+      .body-report-col-2 {
+        width: 136mm;
+        display: inline-block;
+        vertical-align: top;
+        padding: 10 5 5 5;
+        padding-bottom: 15;
+        border-left: 1 solid #2d2d2d;
       }
     </style>
   </head>
   <body>
+    <!--     
     <div id="pageHeader">Default header</div>
     <div id="pageHeader-first">Header on first page</div>
     <div id="pageHeader-2">Header on second page</div>
     <div id="pageHeader-3">Header on third page</div>
-    <div id="pageHeader-last">Header on last page</div>
+    <div id="pageHeader-last">Header on last page</div> 
+  -->
 
-    <div class="head-report">
-      <div class="head-report-title">
-        <div><strong>Informe clínico</strong></div>
-        <div><small>Privado y confidencial</small></div>
-      </div>
-      <div class="head-report-transmitter">
-        Dr. David Ochoa Bermudez. <br />
-        Especialista en ginecostetra basica general. <br />
-        Número colegiado: 1011212 <br />
-        País: Chile <br />
-        Consultorio: Clinica bupa 620, 528-A
-      </div>
+    <div class="head-report-col-1">
+      <div id="titullele" class="title-report-principal">Informe clínico</div>
+      <div><small>Privado y confidencial</small></div>
+      <br />
+      <img
+        src="https://www.tuhospitalvirtual.com/themes/tuagendamedica/resources/images/logos/logoweb.png"
+        height="30"
+      />
+    </div>
+    <div class="head-report-col-2">
+      <table>
+        <tr>
+          <th style="padding: 2; font-size: 10">Doctor(a):</th>
+          <td style="padding: 2; font-size: 10">{{doctorName}}</td>
+        </tr>
+        <tr>
+          <th style="padding: 2; font-size: 10">Número colegiado:</th>
+          <td style="padding: 2; font-size: 10">{{doctorCollegiateNumber}}</td>
+        </tr>
+        <tr>
+          <th style="padding: 2; font-size: 10">Especialidad:</th>
+          <td style="padding: 2; font-size: 10">{{doctorSpecialty}}</td>
+        </tr>
+        <!-- <tr>
+          <th style="padding: 2; font-size: 10">Consultorio:</th>
+          <td style="padding: 2; font-size: 10">XXXX FALTA FRONT XXXX</td>
+        </tr> -->
+        <tr>
+          <th style="padding: 2; font-size: 10">Fecha de la consulta:</th>
+          <td style="padding: 2; font-size: 10">{{consultationDate}}</td>
+        </tr>
+      </table>
     </div>
 
-    <div style="height: 5; background-color: coral"></div>
-
-    <div class="head-report-patient">
-      <div class="head-report-title-patient">
-        <h4>Paciente</h4>
-      </div>
-      <div class="head-report-transmitter-patient">
+    <br />
+    <br />
+    <div class="body-report">
+      <div class="body-report-col-1 titles">Paciente</div>
+      <div class="body-report-col-2">
         <table>
           <tr>
-            <th>Nombre</th>
-            <td>Brayan David Ochoa Bermudez</td>
+            <th style="padding: 2">Cédula:</th>
+            <td style="padding: 2">{{patientDni}}</td>
           </tr>
           <tr>
-            <th>Genero</th>
-            <td>Masculino</td>
+            <th style="padding: 2">Nombre:</th>
+            <td style="padding: 2">{{patientName}}</td>
+          </tr>
+          <tr>
+            <th style="padding: 2">Genero:</th>
+            <td style="padding: 2">{{patientGender}}</td>
+          </tr>
+          <tr>
+            <th style="padding: 2">F. nacimiento:</th>
+            <td style="padding: 2">{{patientBirthDate}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="body-report">
+      <div class="body-report-col-1 titles">Diagnóstico</div>
+      <div class="body-report-col-2">
+        <div style="font-weight: bold">CIE-10</div>
+        <div style="padding-left: 10">
+          154 Neouris gastrica xsaxaaads ffdsfsf sfaf sfsfs fdsf
+        </div>
+        <hr />
+        <strong>Observaciones</strong>
+        <div style="padding-left: 10">
+          Se ve que el paciente consume artos compleos sdafds fasf dsfdsf sfsd
+          fdsfdasfsdfsdf ds fads dsfdsfsd fdsfds fafdsfds, lo cuan no esta bien.
+          Nostrum qui maiores. Quas tenetur maxime corrupti. Doloremque dolorem
+          rem sint officia. Nemo molestias fuga et. Quos velit aut nulla et quod
+          ipsum qui unde et. Laboriosam autem aut maxime consequatur qui. Esse
+          minus voluptatem molestias. Incidunt iste illum officiis debitis
+          officiis. Ut nam rerum veniam quos. Saepe repellat rerum architecto.
+          Nemo assumenda porro non est ipsa officia expedita reiciendis.
+          Voluptas non est similique quod nesciunt possimus. Veritatis minima
+          sint est numquam doloremque officia. Se ve que el paciente consume
+          artos compleos sdafds fasf dsfdsf sfsd fdsfdasfsdfsdf ds fads dsfdsfsd
+          fdsfds fafdsfds, lo cuan no esta bien. Nostrum qui maiores. Quas
+          tenetur maxime corrupti. Doloremque dolorem rem sint officia. Nemo
+          molestias fuga et. Quos velit aut nulla et quod ipsum qui unde et.
+          Laboriosam autem aut maxime consequatur qui. Esse minus voluptatem
+          molestias. Incidunt iste illum officiis debitis officiis. aqi acaba.
+        </div>
+      </div>
+    </div>
+    <div class="body-report">
+      <div class="body-report-col-1 titles">Recetas</div>
+      <div class="body-report-col-2">
+        <div>Rem fugiat sed quae a officiis consequatur est veritatis.</div>
+        <hr />
+        <div>natus inventore enim</div>
+        <hr />
+        <div>
+          Id nostrum ipsum aspernatur neque. Ut a molestias non dolorum. Ea
+          soluta illo enim ea ab. Minima dignissimos est ratione beatae ut et
+          sit accusantium et.
+        </div>
+        <hr />
+        <div>
+          Recusandae at voluptatem adipisci animi adipisci voluptatem
+          consequuntur nihil impedit.
+        </div>
+        <hr />
+        <div>Consectetur officia consequatur.</div>
+      </div>
+    </div>
+    <div class="body-report">
+      <div class="body-report-col-1 titles">Exámenes</div>
+      <div class="body-report-col-2">
+        <div>natus inventore enim</div>
+        <hr />
+        <div>
+          Id nostrum ipsum aspernatur neque. Ut a molestias non dolorum. Ea
+          soluta illo enim ea ab. Minima dignissimos est ratione beatae ut et
+          sit accusantium et.
+        </div>
+        <hr />
+        <div>
+          Recusandae at voluptatem adipisci animi adipisci voluptatem
+          consequuntur nihil impedit.
+        </div>
+        <hr />
+        <div>Rem fugiat sed quae a officiis consequatur est veritatis.</div>
+        <hr />
+        <div>Consectetur officia consequatur.</div>
+      </div>
+    </div>
+    <div class="body-report body-report-end">
+      <div class="body-report-col-1 titles">Cotización</div>
+      <div class="body-report-col-2">
+        <table>
+          <tr>
+            <th>Servicio</th>
+            <th>Costo</th>
+          </tr>
+          <tr>
+            <td>Aumento de mamas</td>
+            <td>1500</td>
           </tr>
         </table>
       </div>
     </div>
 
-    <div style="height: 5; background-color: coral"></div>
+    <div id="pageFooter-first">Defsault footer</div>
 
-    <div class="head-report-patient">
-      <div class="head-report-title-patient">
-        <h4>Evaluacion clínica</h4>
-      </div>
-      <div class="head-report-transmitter-patient">
-        <table>
-          <tr>
-            <th>CIE-10</th>
-            <td>xsaxaaads ffdsfsf sfaf sfsfs fdsf</td>
-          </tr>
-          <tr>
-            <th>Observaciones</th>
-            <td>
-              s sdafds fasf dsfdsf sfsd fdsfdasfsdfsdf ds fads dsfdsfsd fdsfds
-              fafdsfds
-            </td>
-          </tr>
-        </table>
-      </div>
-    </div>
-
-    <div style="height: 5; background-color: coral"></div>
-
-    <div class="head-report-patient">
-      <div class="head-report-title-patient">
-        <h4>Recetas</h4>
-      </div>
-      <div class="head-report-transmitter-patient">
-        <table>
-          <tr>
-            <th>CIE-10</th>
-            <td>xsaxaaads ffdsfsf sfaf sfsfs fdsf</td>
-          </tr>
-          <tr>
-            <th>Observaciones</th>
-            <td>
-              s sdafds fasf dsfdsf sfsd fdsfdasfsdfsdf ds fads dsfdsfsd fdsfds
-              fafdsfds
-            </td>
-          </tr>
-        </table>
-      </div>
-    </div>
-
-    <div style="height: 5; background-color: coral"></div>
-
-    <div class="head-report-patient">
-      <div class="head-report-title-patient">
-        <h4>Exámenes</h4>
-      </div>
-      <div class="head-report-transmitter-patient">
-        <table>
-          <tr>
-            <th>CIE-10</th>
-            <td>xsaxaaads ffdsfsf sfaf sfsfs fdsf</td>
-          </tr>
-          <tr>
-            <th>Observaciones</th>
-            <td>
-              s sdafds fasf dsfdsf sfsd fdsfdasfsdfsdf ds fads dsfdsfsd fdsfds
-              fafdsfds
-            </td>
-          </tr>
-        </table>
-      </div>
-    </div>
-
-    <div style="height: 5; background-color: coral"></div>
-
-    <div class="head-report-patient">
-      <div class="head-report-title-patient">
-        <h4>Cotización</h4>
-      </div>
-      <div class="head-report-transmitter-patient">
-        <table>
-          <tr>
-            <th>CIE-10</th>
-            <td>xsaxaaads ffdsfsf sfaf sfsfs fdsf</td>
-          </tr>
-          <tr>
-            <th>Observaciones</th>
-            <td>
-              s sdafds fasf dsfdsf sfsd fdsfdasfsdfsdf ds fads dsfdsfsd fdsfds
-              fafdsfds
-            </td>
-          </tr>
-        </table>
-      </div>
-    </div>
-
+    <!-- 
     <div id="pageFooter">Default footer</div>
     <div id="pageFooter-first">Footer on first page</div>
     <div id="pageFooter-2">Footer on second page</div>
     <div id="pageFooter-last">Footer on last page</div>
+     -->
   </body>
 </html>

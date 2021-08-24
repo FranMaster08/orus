@@ -176,7 +176,9 @@ export class ConsultationsService {
   }
 
   async findOne(id: string): Promise<ConsultationsEntity> {
-    const consultation = await this.consultationsRepository.findOne(id);
+    const consultation = await this.consultationsRepository.findOne(id, {
+      relations: ['patient', 'doctor', 'doctorDetail'],
+    });
     if (!consultation) {
       throw new NotFoundException('Medical consultation not found');
     }
