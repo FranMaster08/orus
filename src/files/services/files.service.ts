@@ -124,11 +124,14 @@ export class FilesService {
   }
 
   async getReportByConsultationId(consultationId: string, res: any) {
+    this.logger.log(
+      `Params[consultationId: string =${consultationId}, res: @Res]`,
+      `${FilesService.name} | ${this.getReportByConsultationId.name} | BEGIN`,
+    );
+
     const consultation = await this.consultationsServive.findOne(
       consultationId,
     );
-
-    console.log(`consultation`, consultation);
 
     let html = fs.readFileSync('./report.html', 'utf8');
 
@@ -287,25 +290,32 @@ export class FilesService {
 
     htmlPDF.create(html, options).toStream((err, stream) => {
       if (err) return res.end(err.stack);
+
+      this.logger.log(
+        `PDF created`,
+        `${FilesService.name} | ${this.uploadFilesToDirectory.name} | END`,
+      );
+
       res.setHeader('Content-type', 'application/pdf');
       stream.pipe(res);
     });
 
-    htmlPDF
-      .create(html, options)
-      .toFile('./consultation-report.pdf', function (err, res) {
-        if (err) return console.log(err);
-        console.log(res); // { filename: '/app/businesscard.pdf' }
-      });
+    // htmlPDF
+    //   .create(html, options)
+    //   .toFile('./medical-report.pdf', function (err, res) {
+    //     if (err) return console.log(err);
+    //     console.log(res); // { filename: './medical-report.pdf' }
+    //   });
 
-    // htmlPDF.create(html).toStream(function (err, stream) {
+    // htmlPDF.create(html).options(function (err, stream) {
     //   stream.pipe(fs.createWriteStream('./foo2.pdf'));
     // });
 
-    // htmlPDF.create(html).toBuffer(function(err, buffer){
+    // htmlPDF.create(html).toBuffer(function (err, buffer) {
     //   console.log('This is a buffer:', Buffer.isBuffer(buffer));
+    //   console.log(`buffer`, buffer);
     // });
 
-    return 1;
+    // return 1;
   }
 }
