@@ -179,12 +179,12 @@ export class FilesService {
           '{{consultationDiagnosis}}',
           `
           <div style="font-weight: bold">CIE-10</div>
-          <div style="padding-left: 10">
+          <div style="padding: 5 0 0 10">
             ${observations[0]}
           </div>
           <hr />
           <strong>Observaciones</strong>
-          <div style="padding-left: 10">
+          <div style="padding: 5 0 0 10">
           ${observations[1]}
           </div>
           `,
@@ -194,8 +194,8 @@ export class FilesService {
           '{{consultationDiagnosis}}',
           `
           <strong>Observaciones</strong>
-          <div style="padding-left: 10">
-          ${observations[1]}
+          <div style="padding: 5 0 0 10">
+          ${observations[0]}
           </div>
           `,
         );
