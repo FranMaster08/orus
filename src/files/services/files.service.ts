@@ -19,6 +19,8 @@ import * as htmlPDF from 'html-pdf';
 import { GenderType } from 'src/users/enum/gender.enum';
 import 'moment/locale/es';
 import * as moment from 'moment';
+import { ConsultationsStatus } from 'src/consultations/enum/consultations-status.enum';
+import { IQuote } from 'src/shared/interfaces/consultations.interfaces';
 
 @Injectable()
 export class FilesService {
@@ -167,25 +169,134 @@ export class FilesService {
       moment(consultation.date).format('D [de] MMMM [del] YYYY'),
     );
 
+    if (consultation.status === ConsultationsStatus.ATTENDED) {
+      const observations: string[] = JSON.parse(consultation.observations);
+
+      if (observations.length === 0) {
+        html = html.replace('{{consultationDiagnosis}}', 'No indicó');
+      } else if (observations.length === 2) {
+        html = html.replace(
+          '{{consultationDiagnosis}}',
+          `
+          <div style="font-weight: bold">CIE-10</div>
+          <div style="padding-left: 10">
+            ${observations[0]}
+          </div>
+          <hr />
+          <strong>Observaciones</strong>
+          <div style="padding-left: 10">
+          ${observations[1]}
+          </div>
+          `,
+        );
+      } else if (observations.length === 1) {
+        html = html.replace(
+          '{{consultationDiagnosis}}',
+          `
+          <strong>Observaciones</strong>
+          <div style="padding-left: 10">
+          ${observations[1]}
+          </div>
+          `,
+        );
+      }
+
+      const prescriptions: string[] = JSON.parse(consultation.prescriptions);
+      if (prescriptions.length > 0) {
+        let prescriptionsHTML = '';
+        prescriptions.forEach((prescription) => {
+          prescriptionsHTML += `<div>${prescription}</div><hr />`;
+        });
+        html = html.replace(
+          '{{consultationPrescription}}',
+          prescriptionsHTML.slice(0, prescriptionsHTML.length - 6),
+        );
+      } else {
+        html = html.replace('{{consultationPrescription}}', 'No indicó');
+      }
+
+      const exams: string[] = JSON.parse(consultation.exams);
+      if (exams.length > 0) {
+        let examsHTML = '';
+        exams.forEach((exam) => {
+          examsHTML += `<div>${exam}</div><hr />`;
+        });
+        html = html.replace(
+          '{{consultationExams}}',
+          examsHTML.slice(0, examsHTML.length - 6),
+        );
+      } else {
+        html = html.replace('{{consultationExams}}', 'No indicó');
+      }
+
+      const quote: IQuote[] = JSON.parse(consultation.quote);
+      if (quote.length > 0) {
+        let quoteHTML = `
+      <table>
+        <tr>
+          <th style="padding-top: 0px">Servicio</th>
+          <th style="padding-top: 0px">Costo</th>
+        </tr>
+        {{quoteList}}
+      </table>
+      `;
+        let quoteList = '';
+        quote.forEach((quote) => {
+          quoteList += `
+        <tr>
+          <td>${quote.service}</td>
+          <td>${quote.cost}</td>
+        </tr>
+        `;
+        });
+        quoteHTML = quoteHTML.replace('{{quoteList}}', quoteList);
+        html = html.replace('{{consultationQuote}}', quoteHTML);
+      } else {
+        html = html.replace('{{consultationQuote}}', 'No indicó');
+      }
+    }
+
+    html = html.replace('{{consultationId}}', consultation.id);
+
     const options: htmlPDF.CreateOptions = {
       format: 'Letter',
       type: 'pdf',
-      // width: '50mm',
-      // height: '90mm',
+      border: {
+        top: '0mm',
+        right: '7mm',
+        bottom: '7mm',
+        left: '7mm',
+      },
+      paginationOffset: 1, // Override the initial pagination number
+      header: {
+        height: '7mm',
+        contents:
+          '<div style="text-align: right; vertical-align: top;"><small>tuhospitalvirtual.com &nbsp; doctorapp.io</small></div>',
+      },
+      footer: {
+        height: '7mm',
+        contents: {
+          // first: 'Cover page',
+          // 2: 'Second page', // Any page number is working. 1-based index
+          default: `<div style="display: inline-block; width: 73mm;"><span style="color: #444;">{{page}}</span>/<span>{{pages}}</span></div> 
+                    <div style="display: inline-block; width: 73mm; text-align: right;">${consultation.id}</div>`, // fallback value
+          // last: 'Last Page',
+        },
+      },
     };
+
+    htmlPDF.create(html, options).toStream((err, stream) => {
+      if (err) return res.end(err.stack);
+      res.setHeader('Content-type', 'application/pdf');
+      stream.pipe(res);
+    });
 
     htmlPDF
       .create(html, options)
-      .toStream((err, stream) => {
-        if (err) return res.end(err.stack);
-        res.setHeader('Content-type', 'application/pdf');
-        stream.pipe(res);
+      .toFile('./consultation-report.pdf', function (err, res) {
+        if (err) return console.log(err);
+        console.log(res); // { filename: '/app/businesscard.pdf' }
       });
-
-    // htmlPDF.create(html, options).toFile('./foo2.pdf', function (err, res) {
-    //   if (err) return console.log(err);
-    //   console.log(res); // { filename: '/app/businesscard.pdf' }
-    // });
 
     // htmlPDF.create(html).toStream(function (err, stream) {
     //   stream.pipe(fs.createWriteStream('./foo2.pdf'));

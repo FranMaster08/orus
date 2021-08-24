@@ -2,6 +2,11 @@ import { ConsultationsStatus } from '../../consultations/enum/consultations-stat
 import { ConsultationsType } from '../../consultations/enum/consultations-type.enum';
 import { IPatient } from './patients.interfaces';
 
+export interface IQuote {
+  service: string;
+  cost: number;
+}
+
 export interface IConsultation {
   id: string;
   date: Date;
@@ -10,5 +15,3 @@ export interface IConsultation {
   patient: IPatient;
   observations: string;
 }
-
-

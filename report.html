@@ -52,12 +52,12 @@
       }
 
       .head-report-col-1 {
-        width: 78mm;
+        width: 73mm;
         display: inline-block;
         vertical-align: top;
       }
       .head-report-col-2 {
-        width: 78mm;
+        width: 73mm;
         display: inline-block;
         vertical-align: top;
       }
@@ -70,7 +70,7 @@
         border: 0;
       }
       .body-report-col-2 {
-        width: 136mm;
+        width: 125mm;
         display: inline-block;
         vertical-align: top;
         padding: 10 5 5 5;
@@ -149,92 +149,20 @@
     </div>
     <div class="body-report">
       <div class="body-report-col-1 titles">Diagnóstico</div>
-      <div class="body-report-col-2">
-        <div style="font-weight: bold">CIE-10</div>
-        <div style="padding-left: 10">
-          154 Neouris gastrica xsaxaaads ffdsfsf sfaf sfsfs fdsf
-        </div>
-        <hr />
-        <strong>Observaciones</strong>
-        <div style="padding-left: 10">
-          Se ve que el paciente consume artos compleos sdafds fasf dsfdsf sfsd
-          fdsfdasfsdfsdf ds fads dsfdsfsd fdsfds fafdsfds, lo cuan no esta bien.
-          Nostrum qui maiores. Quas tenetur maxime corrupti. Doloremque dolorem
-          rem sint officia. Nemo molestias fuga et. Quos velit aut nulla et quod
-          ipsum qui unde et. Laboriosam autem aut maxime consequatur qui. Esse
-          minus voluptatem molestias. Incidunt iste illum officiis debitis
-          officiis. Ut nam rerum veniam quos. Saepe repellat rerum architecto.
-          Nemo assumenda porro non est ipsa officia expedita reiciendis.
-          Voluptas non est similique quod nesciunt possimus. Veritatis minima
-          sint est numquam doloremque officia. Se ve que el paciente consume
-          artos compleos sdafds fasf dsfdsf sfsd fdsfdasfsdfsdf ds fads dsfdsfsd
-          fdsfds fafdsfds, lo cuan no esta bien. Nostrum qui maiores. Quas
-          tenetur maxime corrupti. Doloremque dolorem rem sint officia. Nemo
-          molestias fuga et. Quos velit aut nulla et quod ipsum qui unde et.
-          Laboriosam autem aut maxime consequatur qui. Esse minus voluptatem
-          molestias. Incidunt iste illum officiis debitis officiis. aqi acaba.
-        </div>
-      </div>
+      <div class="body-report-col-2">{{consultationDiagnosis}}</div>
     </div>
     <div class="body-report">
       <div class="body-report-col-1 titles">Recetas</div>
-      <div class="body-report-col-2">
-        <div>Rem fugiat sed quae a officiis consequatur est veritatis.</div>
-        <hr />
-        <div>natus inventore enim</div>
-        <hr />
-        <div>
-          Id nostrum ipsum aspernatur neque. Ut a molestias non dolorum. Ea
-          soluta illo enim ea ab. Minima dignissimos est ratione beatae ut et
-          sit accusantium et.
-        </div>
-        <hr />
-        <div>
-          Recusandae at voluptatem adipisci animi adipisci voluptatem
-          consequuntur nihil impedit.
-        </div>
-        <hr />
-        <div>Consectetur officia consequatur.</div>
-      </div>
+      <div class="body-report-col-2">{{consultationPrescription}}</div>
     </div>
     <div class="body-report">
       <div class="body-report-col-1 titles">Exámenes</div>
-      <div class="body-report-col-2">
-        <div>natus inventore enim</div>
-        <hr />
-        <div>
-          Id nostrum ipsum aspernatur neque. Ut a molestias non dolorum. Ea
-          soluta illo enim ea ab. Minima dignissimos est ratione beatae ut et
-          sit accusantium et.
-        </div>
-        <hr />
-        <div>
-          Recusandae at voluptatem adipisci animi adipisci voluptatem
-          consequuntur nihil impedit.
-        </div>
-        <hr />
-        <div>Rem fugiat sed quae a officiis consequatur est veritatis.</div>
-        <hr />
-        <div>Consectetur officia consequatur.</div>
-      </div>
+      <div class="body-report-col-2">{{consultationExams}}</div>
     </div>
     <div class="body-report body-report-end">
       <div class="body-report-col-1 titles">Cotización</div>
-      <div class="body-report-col-2">
-        <table>
-          <tr>
-            <th>Servicio</th>
-            <th>Costo</th>
-          </tr>
-          <tr>
-            <td>Aumento de mamas</td>
-            <td>1500</td>
-          </tr>
-        </table>
-      </div>
+      <div class="body-report-col-2">{{consultationQuote}}</div>
     </div>
-
-    <div id="pageFooter-first">Defsault footer</div>
 
     <!-- 
     <div id="pageFooter">Default footer</div>
