@@ -1,3 +1,8 @@
+import { v4 as uuidv4 } from 'uuid';
+import * as fs from 'fs';
+import * as htmlPDF from 'html-pdf';
+import * as moment from 'moment';
+import 'moment/locale/es';
 import {
   ConflictException,
   forwardRef,
@@ -10,17 +15,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateFilesDto } from '../dto/CreateFilesDto';
 import { FilesEntity } from '../entities/files.entity';
-import { v4 as uuidv4 } from 'uuid';
 import { IFilesDB, IUrlFiles } from '../../shared/interfaces/files.interfaces';
+import { IQuote } from '../../shared/interfaces/consultations.interfaces';
+import { ConsultationsService } from '../../consultations/services/consultations.service';
 import { FileExtension } from '../enum/files.enum';
-import { ConsultationsService } from 'src/consultations/services/consultations.service';
-import * as fs from 'fs';
-import * as htmlPDF from 'html-pdf';
-import { GenderType } from 'src/users/enum/gender.enum';
-import 'moment/locale/es';
-import * as moment from 'moment';
-import { ConsultationsStatus } from 'src/consultations/enum/consultations-status.enum';
-import { IQuote } from 'src/shared/interfaces/consultations.interfaces';
+import { GenderType } from '../../users/enum/gender.enum';
+import { ConsultationsStatus } from '../../consultations/enum/consultations-status.enum';
+import { NotifyService } from '../../notify/services/notify.service';
+import { ConsultationsType } from 'src/consultations/enum/consultations-type.enum';
 
 @Injectable()
 export class FilesService {
@@ -29,8 +31,9 @@ export class FilesService {
   constructor(
     @InjectRepository(FilesEntity, 'thv-db')
     private readonly filesRepository: Repository<FilesEntity>,
-    // @Inject(forwardRef(() => ConsultationsService))
+    @Inject(forwardRef(() => ConsultationsService))
     private readonly consultationsServive: ConsultationsService,
+    private readonly notifyService: NotifyService,
   ) {}
 
   async uploadFilesToDirectory(files: CreateFilesDto) {
@@ -123,20 +126,28 @@ export class FilesService {
     return attachedFiles;
   }
 
-  async getReportByConsultationId(consultationId: string, res: any) {
+  async buildReportByConsultationId(consultationId: string, res?: any) {
     this.logger.log(
-      `Params[consultationId: string =${consultationId}, res: @Res]`,
-      `${FilesService.name} | ${this.getReportByConsultationId.name} | BEGIN`,
+      `Params[consultationId: string = ${consultationId}, res: @Res]`,
+      `${FilesService.name} | ${this.buildReportByConsultationId.name} | BEGIN`,
     );
 
     const consultation = await this.consultationsServive.findOne(
       consultationId,
     );
 
-    let html = fs.readFileSync('./report.html', 'utf8');
+    let html = fs.readFileSync(
+      './public/emails/medical-report.pdf.html',
+      'utf8',
+    );
 
     // PATIENT
-    html = html.replace('{{patientDni}}', consultation.patient.dni);
+    if (consultation.patient.dni) {
+      html = html.replace('{{patientDni}}', consultation.patient.dni);
+    } else {
+      html = html.replace('{{patientDni}}', 'No indicó');
+    }
+
     html = html.replace(
       '{{patientName}}',
       `${consultation.patient.firstName} ${consultation.patient.lastName}`,
@@ -149,7 +160,9 @@ export class FilesService {
     );
     html = html.replace(
       '{{patientBirthDate}}',
-      moment(consultation.patient.birthDate).format('D [de] MMMM [del] YYYY'),
+      moment(consultation.patient.birthDate)
+        .utc(false)
+        .format('D [de] MMMM [del] YYYY'),
     );
 
     // DOCTOR
@@ -169,7 +182,7 @@ export class FilesService {
     // CONSULTATION
     html = html.replace(
       '{{consultationDate}}',
-      moment(consultation.date).format('D [de] MMMM [del] YYYY'),
+      moment(consultation.date).utc(false).format('D [de] MMMM [del] YYYY'),
     );
 
     if (consultation.status === ConsultationsStatus.ATTENDED) {
@@ -288,34 +301,51 @@ export class FilesService {
       },
     };
 
-    htmlPDF.create(html, options).toStream((err, stream) => {
-      if (err) return res.end(err.stack);
+    htmlPDF
+      .create(html, options)
+      .toFile(
+        `./public/consultations/reports/mr-${consultation.id}.pdf`,
+        (error, response) => {
+          if (error) return console.log(error);
 
-      this.logger.log(
-        `PDF created`,
-        `${FilesService.name} | ${this.uploadFilesToDirectory.name} | END`,
+          this.logger.log(
+            `Generate report | filename=${response.filename}`,
+            `${FilesService.name} | ${this.buildReportByConsultationId.name} | END`,
+          );
+
+          this.notifyService.notifyConsultationAtendded({
+            id: consultation.id,
+            date: moment(consultation.date)
+              .utc(false)
+              .format('D [de] MMMM [del] YYYY'),
+            patient: {
+              firstName: consultation.patient.firstName,
+              lastName: consultation.patient.lastName,
+            },
+            doctor: {
+              firstName: consultation.doctor.firstName,
+              lastName: consultation.doctor.lastName,
+              gender: consultation.doctor.gender,
+            },
+          });
+
+          if (res) {
+            // hay un endpoint que le envia res (@Res)
+            // pero tambien puede ejecutarse sin ese en point y no enviarle res (@Res)
+            res.json({ filename: response.filename });
+          }
+        },
       );
 
-      res.setHeader('Content-type', 'application/pdf');
-      stream.pipe(res);
-    });
-
-    // htmlPDF
-    //   .create(html, options)
-    //   .toFile('./medical-report.pdf', function (err, res) {
-    //     if (err) return console.log(err);
-    //     console.log(res); // { filename: './medical-report.pdf' }
-    //   });
-
-    // htmlPDF.create(html).options(function (err, stream) {
-    //   stream.pipe(fs.createWriteStream('./foo2.pdf'));
+    // para generarlo directamente en el end point
+    // htmlPDF.create(html, options).toStream((err, stream) => {
+    //   if (err) return res.end(err.stack);
+    //   this.logger.log(
+    //     `PDF created`,
+    //     `${FilesService.name} | ${this.uploadFilesToDirectory.name} | END`,
+    //   );
+    //   res.setHeader('Content-type', 'application/pdf');
+    //   stream.pipe(res);
     // });
-
-    // htmlPDF.create(html).toBuffer(function (err, buffer) {
-    //   console.log('This is a buffer:', Buffer.isBuffer(buffer));
-    //   console.log(`buffer`, buffer);
-    // });
-
-    // return 1;
   }
 }

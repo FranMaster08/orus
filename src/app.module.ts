@@ -48,6 +48,7 @@ import { NotifyModule } from './notify/notity.module';
     MedicalHistoryModule,
     PatientsModule,
     FilesModule,
+    // forwardRef(() => FilesModule),
     NotifyModule
   ],
 })

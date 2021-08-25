@@ -1,5 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
+import * as fs from 'fs';
+import { IEmailConsultationAttended } from 'src/shared/interfaces/emails.interfaces';
+import { GenderType } from 'src/users/enum/gender.enum';
 
 @Injectable()
 export class NotifyService {
@@ -15,47 +18,54 @@ export class NotifyService {
     },
   });
 
-  async notifyConsultationAtendded() {
+  async notifyTest() {}
+
+  async notifyConsultationAtendded(notify: IEmailConsultationAttended) {
     try {
       this.logger.log(
-        `Params[]`,
+        `Preparing to send email | Params[${JSON.stringify(notify)}]`,
         `${NotifyService.name} | ${this.notifyConsultationAtendded.name} | BEGIN`,
       );
 
-      // TODO: crear pdf, y luego adjuntar para envio, ver donde se puede hacer mejor,, 
-      //       este servicio se ejecuta al finalizar la consulta, entonces
-      //       1. se crea el PDF
-      //          creoque aqui meter un await que ejecuta la generacion,, luego ajuntar segun path generado
-      //       2. se envia por mail
-      //       3. se elimina el PDF del sistema, 
-      //          (para que guardarlo ? solo me va a ocupar mas espacio, 
-      //          y solo lo necesito para enviar el mail,,, puedo mostrar la info mas bonita con solo con los datos )
+      let html = fs.readFileSync(
+        `./public/emails/medical-report.email.html`,
+        'utf8',
+      );
+      html = html.replace('{{patientName}}', notify.patient.firstName);
+      html = html.replace('{{consultationDate}}', notify.date);
+
+      let drTitle = 'Dr.';
+      if (notify.doctor.gender === GenderType.FELAME) {
+        drTitle = 'Dra.';
+      }
 
       const info = await this.transporter.sendMail({
-        from: '"Dr. David Ochoa"  <doctor@tuhospitalvirtual.com>', // sender address
+        from: `"${drTitle} ${notify.doctor.firstName} ${notify.doctor.lastName}"  <doctor@tuhospitalvirtual.com>`, // sender address
         to: 'brayad@gmail.com, bochoa@acid.cl, doctor@tuhospitalvirtual.com', // list of receivers
-        subject: '📋 Informe clínico de Maria Ferrer 6', // Subject line
-        text: 'Hola Maria, adjunto el informe clínico de la consulta del 3 de agosto del 2021', // plain text body
-        html: 'Hola Maria, adjunto el <b>informe clínico</b> de la consulta del 3 de agosto del 2021', // html body
+        subject: `📋 Informe clínico de ${notify.patient.firstName} ${notify.patient.lastName}`, // Subject line
+        text: `Hola ${notify.patient.firstName}, adjunto el informe clínico de la consulta del ${notify.date}`, // plain text body
+        html,
         attachments: [
           {
-            path: './medical-report.pdf',
+            filename: 'medical-report.pdf',
+            path: `./public/consultations/reports/mr-${notify.id}.pdf`,
           },
         ],
       });
 
-      // console.log(`info`, info);
-
-      // TODO: add log send email and save in trasabilitie table database
-
       this.logger.log(
-        `Message sent`,
+        `Send Email OK`,
         `${NotifyService.name} | ${this.notifyConsultationAtendded.name} | END`,
       );
+
+      fs.unlinkSync(`./public/consultations/reports/mr-${notify.id}.pdf`);
+      this.logger.log(
+        `Delete file mr-${notify.id}.pdf`,
+        `${NotifyService.name} | ${this.notifyConsultationAtendded.name} | DELETE`,
+      );
     } catch (error) {
-      console.log(`error`, error);
       this.logger.error(
-        error.message,
+        `Send Email Error[${error.message}]`,
         error,
         `${NotifyService.name} | ${this.notifyConsultationAtendded.name} | END`,
       );

@@ -51,7 +51,7 @@ export class FilesController {
   @UseGuards(AuthGuard('jwt'))
   @Get('consultations/:id/report')
   async getReportByConsultationId(@Param('id') consultationId: string, @Res() res: any) {
-    return await this.filesService.getReportByConsultationId(consultationId, res);
+    return await this.filesService.buildReportByConsultationId(consultationId, res);
   }
 }
 

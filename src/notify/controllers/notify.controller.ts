@@ -7,6 +7,6 @@ export class NotifyController {
 
   @Post('consultation-created')
   async notifyConsultationAtendded() {
-    this.notifyService.notifyConsultationAtendded();
+    this.notifyService.notifyTest();
   }
 }

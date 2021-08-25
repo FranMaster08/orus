@@ -17,6 +17,7 @@ import { ConsultationsEntity } from '../entities/consultations.entity';
 import { ConsultationsStatus } from '../enum/consultations-status.enum';
 import { IConsultation } from '../../shared/interfaces/consultations.interfaces';
 import { NotifyService } from 'src/notify/services/notify.service';
+import { FilesService } from 'src/files/services/files.service';
 
 @Injectable()
 export class ConsultationsService {
@@ -25,13 +26,16 @@ export class ConsultationsService {
   constructor(
     @InjectRepository(ConsultationsEntity, 'thv-db')
     private readonly consultationsRepository: Repository<ConsultationsEntity>,
-    // @Inject(forwardRef(() => NotifyService))
-    private readonly notifyService: NotifyService,
+    @Inject(forwardRef(() => FilesService))
+    private readonly filesService: FilesService,
   ) {}
 
   async createConsultation(
     data: CreateConsultationDto,
   ): Promise<ConsultationsEntity> {
+    // TODO: verificar si el doctor existe
+    // TODO: verificar si el paciente existe
+
     this.logger.log('BEGIN [createConsultation] ' + JSON.stringify(data));
 
     const newConsultation = new ConsultationsEntity();
@@ -53,9 +57,6 @@ export class ConsultationsService {
       saveConsultation.id,
       { relations: ['patient'] },
     );
-
-    // le saque el async para que no se tardara tanto en la respuesta
-    this.notifyService.notifyConsultationAtendded();
 
     return getConsultation;
 
@@ -113,10 +114,10 @@ export class ConsultationsService {
       quote: JSON.stringify(data.quote),
     });
 
-    return await this.consultationsRepository.findOne(id);
+    // create pdf and send mail
+    this.filesService.buildReportByConsultationId(id);
 
-    // TODO: se crea informe PDF
-    // TODO: se envia email con informe PDF
+    return await this.consultationsRepository.findOne(id);
   }
 
   async cancelConsultation(
