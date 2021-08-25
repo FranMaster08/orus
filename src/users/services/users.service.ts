@@ -1,19 +1,24 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  forwardRef,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UsersEntity } from '../entities/users.entity';
-import { CreateUserDto } from '../dto/createUsuarios.dto';
+import { CreateUserDto } from '../dto/createUsers.dto';
 import { compare, hash } from 'bcryptjs';
 
 @Injectable()
-export class UsuariosService {
+export class UsersService {
   constructor(
     @InjectRepository(UsersEntity, 'thv-db')
-    private usuariosRepository: Repository<UsersEntity>,
+    private readonly usersRepository: Repository<UsersEntity>,
   ) {}
 
-  async crearUsuario(user: CreateUserDto) {
-    const exist = await this.usuariosRepository.count({ email: user.email });
+  async createUser(user: CreateUserDto) {
+    const exist = await this.usersRepository.count({ email: user.email });
     if (exist) {
       throw new ConflictException('User already exists');
     }
@@ -28,12 +33,12 @@ export class UsuariosService {
     nuevoUsuario.birthDate = user.birthDate;
     nuevoUsuario.password = await this.hashPassword(user.password);
 
-    const userCreate = await this.usuariosRepository.create(nuevoUsuario);
-    const userSave = await this.usuariosRepository.save(userCreate);
+    const userCreate = await this.usersRepository.create(nuevoUsuario);
+    const userSave = await this.usersRepository.save(userCreate);
 
     // TODO: enviar email
 
-    let createdUser = await this.usuariosRepository.findOne(userSave.id, {});
+    let createdUser = await this.usersRepository.findOne(userSave.id, {});
 
     return createdUser;
   }
@@ -49,11 +54,21 @@ export class UsuariosService {
     return await compare(canditatePassword, password);
   }
 
-  async findOne(query: any): Promise<UsersEntity> {
-    return await this.usuariosRepository.findOne({ where: query });
+  async findOne(where: { query: {} }): Promise<UsersEntity> {
+    return await this.usersRepository.findOne({ where: where.query });
   }
 
-  async getUsuarios(): Promise<void> {
-    const usuarios = await this.usuariosRepository.find();
+  async updateTokenPasswordRecovery(
+    id: string,
+    tokenPasswordRecovery: string,
+  ): Promise<number> {
+    const update = await this.usersRepository.update(id, {
+      tokenPasswordRecovery,
+    });
+    if (update.affected) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 }

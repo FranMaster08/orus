@@ -11,6 +11,15 @@ export interface IEmailConsultationAttended {
   doctor: {
     firstName: string;
     lastName: string;
-    gender: GenderType
+    gender: GenderType;
   };
+}
+
+export interface IEmailRecoveryPassword {
+  user: {
+    email: string;
+    firstName: string;
+    lastName?: string;
+  };
+  tokenPasswordRecovery: string;
 }

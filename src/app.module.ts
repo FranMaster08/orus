@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 // import { ConfigModule } from './config/config.module';
 // import { ConfigService } from './config/config.service';
 // import { Configuration } from './config/config.keys';
-import { UsuariosModule } from './users/users.module';
+import { UsersModule } from './users/users.module';
 import { UsersEntity } from './users/entities/users.entity';
 import { AuthModule } from './auth/auth.module';
 import { DoctorsModule } from './doctors/doctors.module';
@@ -40,7 +40,7 @@ import { NotifyModule } from './notify/notity.module';
       ],
     }),
     // ConfigModule,
-    UsuariosModule,
+    UsersModule,
     AuthModule,
     DoctorsModule,
     ConsultationsModule,

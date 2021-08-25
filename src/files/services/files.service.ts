@@ -137,7 +137,7 @@ export class FilesService {
     );
 
     let html = fs.readFileSync(
-      './public/emails/medical-report.pdf.html',
+      './public/emails/medical-report/medical-report.pdf.html',
       'utf8',
     );
 

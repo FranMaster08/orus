@@ -1,7 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import * as fs from 'fs';
-import { IEmailConsultationAttended } from 'src/shared/interfaces/emails.interfaces';
+import {
+  IEmailConsultationAttended,
+  IEmailRecoveryPassword,
+} from 'src/shared/interfaces/emails.interfaces';
 import { GenderType } from 'src/users/enum/gender.enum';
 
 @Injectable()
@@ -28,7 +31,7 @@ export class NotifyService {
       );
 
       let html = fs.readFileSync(
-        `./public/emails/medical-report.email.html`,
+        `./public/emails/medical-report/medical-report.email.html`,
         'utf8',
       );
       html = html.replace('{{patientName}}', notify.patient.firstName);
@@ -39,6 +42,7 @@ export class NotifyService {
         drTitle = 'Dra.';
       }
 
+      // FIXME: agregar el mail del paciente y quitar esos estaticos de pruebas
       const info = await this.transporter.sendMail({
         from: `"${drTitle} ${notify.doctor.firstName} ${notify.doctor.lastName}"  <doctor@tuhospitalvirtual.com>`, // sender address
         to: 'brayad@gmail.com, bochoa@acid.cl, doctor@tuhospitalvirtual.com', // list of receivers
@@ -69,8 +73,44 @@ export class NotifyService {
         error,
         `${NotifyService.name} | ${this.notifyConsultationAtendded.name} | END`,
       );
-      // TODO: add log ERROR send email and save in trasabilitie table database
-      // TODO: add logger
+    }
+  }
+
+  async notifyRecoveryPasswordSendEmail(recovery: IEmailRecoveryPassword) {
+    try {
+      this.logger.log(
+        `Preparing to send email | Params[${JSON.stringify(recovery)}]`,
+        `${NotifyService.name} | ${this.notifyRecoveryPasswordSendEmail.name} | BEGIN`,
+      );
+
+      let html = fs.readFileSync(
+        `./public/emails/recovery-password/recovery-password.email.html`,
+        'utf8',
+      );
+
+      html = html.replace('{{userFirstName}}', recovery.user.firstName);
+      html = html.replace('{{hash}}', recovery.tokenPasswordRecovery);
+
+      const info = await this.transporter.sendMail({
+        from: `"THV Ayuda"  <ayuda@tuhospitalvirtual.com>`, // TODO: crear ese email de ayuda
+        to: `${recovery.user.email}, ayuda@tuhospitalvirtual.com`,
+        subject: `Solicitaste la recuperación de tu clave`,
+        text: `Hola ${recovery.user.firstName}, solicitaste la recuperación de tu clave. `, // plain text body // TODO: agregar el ingresa aqui, con el link, como en el email.html
+        html,
+      });
+
+      this.logger.log(
+        `Send Email OK`,
+        `${NotifyService.name} | ${this.notifyConsultationAtendded.name} | END`,
+      );
+      return 1;
+    } catch (error) {
+      this.logger.error(
+        `Send Email Error[${error.message}]`,
+        error,
+        `${NotifyService.name} | ${this.notifyRecoveryPasswordSendEmail.name} | END`,
+      );
+      return 0;
     }
   }
 }
