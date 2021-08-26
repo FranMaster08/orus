@@ -39,7 +39,7 @@ export class FilesController {
 
   @Get(':fileName')
   getFile(@Res() res, @Param('fileName') fileName: string) {
-    const path_ = path.join(__dirname, `../../../public/${fileName}`);
+    const path_ = path.join(__dirname, `../../../public/consultations/attachments/${fileName}`);
 
     if (!fs.existsSync(path_)) {
       throw new NotFoundException('File not found');

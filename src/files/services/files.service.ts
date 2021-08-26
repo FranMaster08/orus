@@ -45,7 +45,7 @@ export class FilesService {
         const base64Img = file.base64;
         const fileName = `${uuidv4()}.${file.extension}`;
         const content = Buffer.from(base64Img, 'base64');
-        fs.writeFileSync(`./public/${fileName}`, content);
+        fs.writeFileSync(`./public/consultations/attachments/${fileName}`, content);
 
         urlFiles.push({
           name: fileName,
@@ -102,7 +102,11 @@ export class FilesService {
     });
 
     if (!findAttachedFiles) {
-      throw new NotFoundException('Consultation not found');
+      // throw new NotFoundException('Files Consultation not found');
+      return {
+        images: [],
+        pdfs: [],
+      };
     }
 
     const attachedFiles: { images: string[]; pdfs: string[] } = {

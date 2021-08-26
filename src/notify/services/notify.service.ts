@@ -44,8 +44,8 @@ export class NotifyService {
 
       // FIXME: agregar el mail del paciente y quitar esos estaticos de pruebas
       const info = await this.transporter.sendMail({
-        from: `"${drTitle} ${notify.doctor.firstName} ${notify.doctor.lastName}"  <doctor@tuhospitalvirtual.com>`, // sender address
-        to: 'brayad@gmail.com, bochoa@acid.cl, doctor@tuhospitalvirtual.com', // list of receivers
+        from: `"${drTitle} ${notify.doctor.firstName} ${notify.doctor.lastName}"  <${process.env.SMPT_USER_DOCTOR}>`, // sender address
+        to: `brayad@gmail.com, ${process.env.SMPT_USER_DOCTOR}`, // list of receivers
         subject: `📋 Informe clínico de ${notify.patient.firstName} ${notify.patient.lastName}`, // Subject line
         text: `Hola ${notify.patient.firstName}, adjunto el informe clínico de la consulta del ${notify.date}`, // plain text body
         html,
@@ -98,9 +98,9 @@ export class NotifyService {
       );
 
       const info = await this.transporter.sendMail({
-        from: `"THV Ayuda"  <ayuda@tuhospitalvirtual.com>`, // TODO: crear ese email de ayuda
-        to: `${recovery.user.email}, ayuda@tuhospitalvirtual.com`,
-        subject: `Solicitaste la recuperación de tu clave`,
+        from: `"${process.env.SMPT_USER_AYUDA}"  <${process.env.SMPT_USER_AYUDA}>`, // TODO: crear ese email de ayuda
+        to: `${recovery.user.email}, ${process.env.SMPT_USER_AYUDA}`,
+        subject: `👀 Solicitaste la recuperación de tu clave`,
         text: `Hola ${recovery.user.firstName}, solicitaste la recuperación de tu clave. `, // plain text body // TODO: agregar el ingresa aqui, con el link, como en el email.html
         html,
       });
