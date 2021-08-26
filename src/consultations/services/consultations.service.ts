@@ -16,8 +16,7 @@ import { UpdateConsultationDto } from '../dto/update-consultation.dto';
 import { ConsultationsEntity } from '../entities/consultations.entity';
 import { ConsultationsStatus } from '../enum/consultations-status.enum';
 import { IConsultation } from '../../shared/interfaces/consultations.interfaces';
-import { NotifyService } from 'src/notify/services/notify.service';
-import { FilesService } from 'src/files/services/files.service';
+import { FilesService } from '../../files/services/files.service';
 
 @Injectable()
 export class ConsultationsService {
@@ -60,7 +59,7 @@ export class ConsultationsService {
 
     return getConsultation;
 
-    // TODO: enviar mail creada exitosamente la consulta
+    // TODO: enviar mail con la agenda de la consulta
     // TODO: verificar si hay una consulta para esa misma fecha y horario
     // TODO: verificar si el paciente tiene 2 consultas por atender, solo puede tener 2 por atender
   }
@@ -147,8 +146,7 @@ export class ConsultationsService {
 
     return await this.consultationsRepository.findOne(id);
 
-    // TODO: se crea informe PDF
-    // TODO: se envia email con informe PDF
+    // TODO: se envia email informando la cancelacion
   }
 
   async rescheduleConsultation(
@@ -172,8 +170,7 @@ export class ConsultationsService {
 
     return await this.consultationsRepository.findOne(id);
 
-    // TODO: se crea informe PDF
-    // TODO: se envia email con informe PDF
+    // TODO: se envia email cinformando la reagenda
   }
 
   async findOne(id: string): Promise<ConsultationsEntity> {

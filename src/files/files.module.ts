@@ -1,6 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { NotifyService } from 'src/notify/services/notify.service';
+import { NotifyService } from '../notify/services/notify.service';
 import { ConsultationsModule } from '../consultations/consultations.module';
 import { FilesController } from './controllers/files.controller';
 import { FilesEntity } from './entities/files.entity';

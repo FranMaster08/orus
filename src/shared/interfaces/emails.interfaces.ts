@@ -1,5 +1,4 @@
-import { GenderType } from 'src/users/enum/gender.enum';
-import { ConsultationsType } from '../../consultations/enum/consultations-type.enum';
+import { GenderType } from '../../users/enum/gender.enum';
 
 export interface IEmailConsultationAttended {
   id: string;
@@ -17,6 +16,7 @@ export interface IEmailConsultationAttended {
 
 export interface IEmailRecoveryPassword {
   user: {
+    id: string;
     email: string;
     firstName: string;
     lastName?: string;

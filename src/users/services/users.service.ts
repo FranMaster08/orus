@@ -1,7 +1,5 @@
 import {
   ConflictException,
-  forwardRef,
-  Inject,
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,6 +7,7 @@ import { Repository } from 'typeorm';
 import { UsersEntity } from '../entities/users.entity';
 import { CreateUserDto } from '../dto/createUsers.dto';
 import { compare, hash } from 'bcryptjs';
+import { IUser } from '../../shared/interfaces/users.interfaces';
 
 @Injectable()
 export class UsersService {
@@ -54,10 +53,6 @@ export class UsersService {
     return await compare(canditatePassword, password);
   }
 
-  async findOne(where: { query: {} }): Promise<UsersEntity> {
-    return await this.usersRepository.findOne({ where: where.query });
-  }
-
   async updateTokenPasswordRecovery(
     id: string,
     tokenPasswordRecovery: string,
@@ -70,5 +65,15 @@ export class UsersService {
     } else {
       return 0;
     }
+  }
+
+  async findOne(config: { where: IUser }): Promise<UsersEntity> {
+    const { where } = config;
+    return await this.usersRepository.findOne({ where });
+  }
+
+  async update(where: IUser, setParams: IUser): Promise<number> {
+    const updateResult = await this.usersRepository.update(where, setParams);
+    return updateResult.affected ? 1 : 0;
   }
 }

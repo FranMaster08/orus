@@ -22,7 +22,6 @@ import { FileExtension } from '../enum/files.enum';
 import { GenderType } from '../../users/enum/gender.enum';
 import { ConsultationsStatus } from '../../consultations/enum/consultations-status.enum';
 import { NotifyService } from '../../notify/services/notify.service';
-import { ConsultationsType } from 'src/consultations/enum/consultations-type.enum';
 
 @Injectable()
 export class FilesService {

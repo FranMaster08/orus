@@ -4,7 +4,7 @@ import { AuthController } from './controllers/auth.controller';
 import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
-import { NotifyModule } from 'src/notify/notity.module';
+import { NotifyModule } from '../notify/notity.module';
 // import { PassportModule } from '@nestjs/passport';
 
 @Module({

@@ -4,8 +4,8 @@ import * as fs from 'fs';
 import {
   IEmailConsultationAttended,
   IEmailRecoveryPassword,
-} from 'src/shared/interfaces/emails.interfaces';
-import { GenderType } from 'src/users/enum/gender.enum';
+} from '../../shared/interfaces/emails.interfaces';
+import { GenderType } from '../../users/enum/gender.enum';
 
 @Injectable()
 export class NotifyService {
@@ -58,7 +58,9 @@ export class NotifyService {
       });
 
       this.logger.log(
-        `Send Email OK`,
+        `Send Email OK | To[${JSON.stringify(
+          info.envelope.to,
+        )}] From[${JSON.stringify(info.envelope.from)}]`,
         `${NotifyService.name} | ${this.notifyConsultationAtendded.name} | END`,
       );
 
@@ -87,9 +89,13 @@ export class NotifyService {
         `./public/emails/recovery-password/recovery-password.email.html`,
         'utf8',
       );
-
       html = html.replace('{{userFirstName}}', recovery.user.firstName);
-      html = html.replace('{{hash}}', recovery.tokenPasswordRecovery);
+
+      const href = `${process.env.MAIL_LINK_PASSWORD_RECOVERY}?t=${recovery.tokenPasswordRecovery}&u=${recovery.user.id}&e=${recovery.user.email}&n=${recovery.user.firstName}`;
+      html = html.replace(
+        '{{linkPasswordRecovery}}',
+        `<a href="${href}">aquí</a>`,
+      );
 
       const info = await this.transporter.sendMail({
         from: `"THV Ayuda"  <ayuda@tuhospitalvirtual.com>`, // TODO: crear ese email de ayuda
@@ -100,7 +106,9 @@ export class NotifyService {
       });
 
       this.logger.log(
-        `Send Email OK`,
+        `Send Email OK | To[${JSON.stringify(
+          info.envelope.to,
+        )}] From[${JSON.stringify(info.envelope.from)}] href[${href}]`,
         `${NotifyService.name} | ${this.notifyConsultationAtendded.name} | END`,
       );
       return 1;

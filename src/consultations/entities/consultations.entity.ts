@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { ConsultationsStatus } from '../enum/consultations-status.enum';
 import { ConsultationsType } from '../enum/consultations-type.enum';
-import { DoctorsEntity } from 'src/doctors/entities/doctors.entity';
+import { DoctorsEntity } from '../../doctors/entities/doctors.entity';
 
 @Entity('consultations')
 export class ConsultationsEntity {

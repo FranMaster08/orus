@@ -1,7 +1,5 @@
 import {
   ConflictException,
-  forwardRef,
-  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -14,7 +12,11 @@ import { JwtService } from '@nestjs/jwt';
 import { UserStatusEnum } from '../../users/enum/user-status.enum';
 import { v4 as uuidv4 } from 'uuid';
 import { RecoveryPassByEmailDto } from '../dto/RecoveryPassByEmailDto';
-import { NotifyService } from 'src/notify/services/notify.service';
+import { NotifyService } from '../../notify/services/notify.service';
+import {
+  TypeResponse,
+  TypeResponseError,
+} from '../../shared/types/response.type';
 
 @Injectable()
 export class AuthService {
@@ -31,7 +33,7 @@ export class AuthService {
 
   async login(credentials: LoginCredentialsDto): Promise<any> {
     const user = await this.usersService.findOne({
-      query: { email: credentials.username },
+      where: { email: credentials.username },
     });
 
     if (!user || user.status !== UserStatusEnum.ACTIVE) {
@@ -76,7 +78,7 @@ export class AuthService {
 
   async recoveryPasswordSendEmail(email: string) {
     const user = await this.usersService.findOne({
-      query: { email },
+      where: { email },
     });
 
     if (!user) {
@@ -93,7 +95,12 @@ export class AuthService {
     if (reponseUTPR) {
       const sendMail = await this.notifyService.notifyRecoveryPasswordSendEmail(
         {
-          user: { email, firstName: user.firstName, lastName: user.lastName },
+          user: {
+            id: user.id,
+            email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+          },
           tokenPasswordRecovery: tokenPasswordRecovery,
         },
       );
@@ -101,6 +108,10 @@ export class AuthService {
         return {
           statusCode: 1,
           message: 'Email sent',
+          user: {
+            firstName: user.firstName,
+            email: user.email,
+          },
         };
       } else {
         return {
@@ -116,15 +127,48 @@ export class AuthService {
       message: 'Token has not been built',
       error: 'Not Built',
     };
-
-    // TODO: FRONT pantalla de email
-    // TODO: FRONT pantalla de recovery email con new pass and repeat new pass
-
-    // TODO: change pass by token (async recoveryPasswordByEmail)
   }
 
-  async recoveryPasswordByEmail(recovery: RecoveryPassByEmailDto) {
-    console.log(`recovery.email`, recovery.email);
-    console.log(`recovery.password`, recovery.password);
+  async recoveryPasswordByEmail(
+    recovery: RecoveryPassByEmailDto,
+  ): Promise<TypeResponse | TypeResponseError | void> {
+    const user = await this.usersService.findOne({
+      where: {
+        id: recovery.userId,
+        email: recovery.email,
+        tokenPasswordRecovery: recovery.tokenPasswordRecovery,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found or token is expired');
+    }
+
+    const updateResult = await this.usersService.update(
+      {
+        id: recovery.userId,
+        email: recovery.email,
+        tokenPasswordRecovery: recovery.tokenPasswordRecovery,
+      },
+      {
+        password: await this.usersService.hashPassword(recovery.password),
+        tokenPasswordRecovery: null,
+      },
+    );
+
+    if (updateResult) {
+      return { statusCode: 1, user: { firstName: user.firstName } };
+    } else {
+      return {
+        statusCode: 0,
+        error: 'Not updated',
+        message: 'Password has not been reset',
+      };
+    }
+
+    // TODO: creo que el token deveria tener un vencimiento de una hora o algo asi,
+    // en la base de datos { token: xxx, expiresIn: "1hour" } ... expiresIn, date now, + 1 hour, y despues comparar
+    // verificar en la pagina de front,, y decir si ha espirado o no el token,, esta opcion ha expidaro
+    // o pasar un cron diario que setee a null todos los token_password_recovery
   }
 }
