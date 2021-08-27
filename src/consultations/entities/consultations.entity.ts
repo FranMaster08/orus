@@ -37,10 +37,13 @@ export class ConsultationsEntity {
   type: ConsultationsType;
 
   @Column({ name: 'family_id' })
-  family_id: string;
+  familyId: string;
 
   @Column({ type: 'datetime' })
   date: Date;
+
+  @Column({ name: 'place' })
+  place: string;
 
   @Column()
   observations: string;

@@ -42,8 +42,9 @@ export class ConsultationsService {
     newConsultation.patientId = data.patientId;
     newConsultation.status = data.status;
     newConsultation.type = data.type;
-    newConsultation.family_id = data.familyId;
+    newConsultation.familyId = data.familyId;
     newConsultation.date = data.date;
+    newConsultation.place = data.place;
     newConsultation.observations = JSON.stringify(data.observations);
     newConsultation.prescriptions = JSON.stringify(data.prescriptions);
     newConsultation.exams = JSON.stringify(data.exams);

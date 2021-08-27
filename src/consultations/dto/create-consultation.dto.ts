@@ -34,6 +34,9 @@ export class CreateConsultationDto {
   @IsDateString()
   readonly date: Date;
 
+  @IsString()
+  readonly place: string;
+
   @IsArray()
   readonly observations: []; // TODO: crear tipo como corresponde, DTO, para que valide los internos, y una UNA INTERFAZ
 
