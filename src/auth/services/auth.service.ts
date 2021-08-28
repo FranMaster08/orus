@@ -131,7 +131,7 @@ export class AuthService {
 
   async recoveryPasswordByEmail(
     recovery: RecoveryPassByEmailDto,
-  ): Promise<TypeResponse | TypeResponseError | void> {
+  ): Promise<TypeResponse | TypeResponseError> {
     const user = await this.usersService.findOne({
       where: {
         id: recovery.userId,
@@ -157,7 +157,11 @@ export class AuthService {
     );
 
     if (updateResult) {
-      return { statusCode: 1, user: { firstName: user.firstName } };
+      return {
+        statusCode: 1,
+        message: 'Password has been reset',
+        user: { firstName: user.firstName },
+      };
     } else {
       return {
         statusCode: 0,

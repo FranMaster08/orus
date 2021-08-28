@@ -9,7 +9,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class StockDto {
+export class CreateStockDto {
   @MinLength(36)
   @MaxLength(36)
   @IsNotEmpty()
