@@ -1,3 +1,4 @@
+import { RoleType } from 'src/role/roletype.enum';
 import { GenderType } from '../../users/enum/gender.enum';
 import { UserStatusEnum } from '../../users/enum/user-status.enum';
 
@@ -12,4 +13,5 @@ export interface IUser {
   gender?: GenderType;
   tokenPasswordRecovery?: string;
   password?: string;
+  role?: RoleType;
 }

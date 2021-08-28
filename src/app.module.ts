@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 // import { ConfigModule } from './config/config.module';
@@ -17,6 +17,8 @@ import { PatientsModule } from './patients/patients.module';
 import { FilesModule } from './files/files.module';
 import { FilesEntity } from './files/entities/files.entity';
 import { NotifyModule } from './notify/notity.module';
+import { InventoryModule } from './inventory/inventory.module';
+import { InventoryEntity } from './inventory/entities/inventory.entity';
 
 @Module({
   imports: [
@@ -37,6 +39,7 @@ import { NotifyModule } from './notify/notity.module';
         ConsultationsEntity,
         MedicalHistoryEntity,
         FilesEntity,
+        InventoryEntity,
       ],
     }),
     // ConfigModule,
@@ -44,12 +47,11 @@ import { NotifyModule } from './notify/notity.module';
     AuthModule,
     DoctorsModule,
     ConsultationsModule,
-    // forwardRef(() => ConsultationsModule),
     MedicalHistoryModule,
     PatientsModule,
     FilesModule,
-    // forwardRef(() => FilesModule),
-    NotifyModule
+    NotifyModule,
+    InventoryModule,
   ],
 })
 export class AppModule {}
