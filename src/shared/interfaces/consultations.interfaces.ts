@@ -9,9 +9,13 @@ export interface IQuote {
 
 export interface IConsultation {
   id: string;
-  date: Date;
   status: ConsultationsStatus;
   type: ConsultationsType;
-  patient: IPatient;
+  date: Date;
+  place: string;
   observations: string;
+  prescriptions: string;
+  exams: string;
+  quote: string;
+  patient: IPatient;
 }

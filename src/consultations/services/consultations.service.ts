@@ -69,7 +69,17 @@ export class ConsultationsService {
     let consultations: IConsultation[];
     if (role === RoleType.DOCTOR) {
       consultations = await this.consultationsRepository.find({
-        select: ['id', 'date', 'status', 'type', 'observations'],
+        select: [
+          'id',
+          'date',
+          'status',
+          'type',
+          'place',
+          'observations',
+          'prescriptions',
+          'exams',
+          'quote',
+        ],
         where: { doctorId: id },
         relations: ['patient'],
         order: { date: 'ASC' },
@@ -77,16 +87,46 @@ export class ConsultationsService {
 
       consultations = consultations.map((consultation) => ({
         id: consultation.id,
-        date: consultation.date,
         status: consultation.status,
         type: consultation.type,
+        date: consultation.date,
+        place: consultation.place,
+        observations: JSON.parse(consultation.observations),
+        prescriptions: JSON.parse(consultation.prescriptions),
+        exams: JSON.parse(consultation.exams),
+        quote: JSON.parse(consultation.quote),
         patient: consultation.patient,
-        observations: consultation.observations,
       }));
     } else if (role === RoleType.PATIENT) {
       consultations = await this.consultationsRepository.find({
+        select: [
+          'id',
+          'date',
+          'status',
+          'type',
+          'place',
+          'observations',
+          'prescriptions',
+          'exams',
+          'quote',
+        ],
         where: { patientId: id },
+        relations: ['patient'],
+        order: { date: 'ASC' },
       });
+
+      consultations = consultations.map((consultation) => ({
+        id: consultation.id,
+        status: consultation.status,
+        type: consultation.type,
+        date: consultation.date,
+        place: consultation.place,
+        observations: JSON.parse(consultation.observations),
+        prescriptions: JSON.parse(consultation.prescriptions),
+        exams: JSON.parse(consultation.exams),
+        quote: JSON.parse(consultation.quote),
+        patient: consultation.patient,
+      }));
     } else if (role === RoleType.ADMIN) {
       consultations = await this.consultationsRepository.find();
     }
