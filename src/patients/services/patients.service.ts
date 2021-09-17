@@ -38,6 +38,7 @@ export class PatientsService {
         status: UserStatusEnum[user.status],
         birthDate: user.birthDate,
         gender,
+        familyId: user.familyId,
       };
     });
     return patients;
@@ -74,5 +75,17 @@ export class PatientsService {
     }));
 
     return transformHistory;
+  }
+
+  async getPatientFamilyByPatientId(id: string): Promise<IPatient[]> {
+    const patient = await this.usersRepository.findOne({ id });
+
+    if (!patient) {
+      throw new NotFoundException('Patient not found');
+    }
+
+    const family = await this.usersRepository.find({ where: { familyId: id } });
+
+    return family;
   }
 }

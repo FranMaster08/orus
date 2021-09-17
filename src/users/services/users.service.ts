@@ -1,7 +1,4 @@
-import {
-  ConflictException,
-  Injectable,
-} from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UsersEntity } from '../entities/users.entity';
@@ -31,6 +28,7 @@ export class UsersService {
     nuevoUsuario.role = user.role;
     nuevoUsuario.birthDate = user.birthDate;
     nuevoUsuario.password = await this.hashPassword(user.password);
+    nuevoUsuario.familyId = user.familyId;
 
     const userCreate = await this.usersRepository.create(nuevoUsuario);
     const userSave = await this.usersRepository.save(userCreate);
@@ -70,6 +68,11 @@ export class UsersService {
   async findOne(config: { where: IUser }): Promise<UsersEntity> {
     const { where } = config;
     return await this.usersRepository.findOne({ where });
+  }
+
+  async findFamilyIdsByPatientId(patientId): Promise<string[]> {
+    const find = await this.usersRepository.find({ familyId: patientId });
+    return find.map((user) => user.id);
   }
 
   async update(where: IUser, setParams: IUser): Promise<number> {

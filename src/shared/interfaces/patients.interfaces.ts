@@ -10,4 +10,5 @@ export interface IPatient {
   status: UserStatusEnum;
   birthDate: Date;
   gender: GenderType;
+  familyId: string;
 }

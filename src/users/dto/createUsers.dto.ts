@@ -18,7 +18,7 @@ export class CreateUserDto {
   @IsString()
   readonly lastName: string;
 
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsEmail()
   readonly email: string;
 
@@ -45,4 +45,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsDateString()
   readonly birthDate: Date;
+
+  @IsString()
+  readonly familyId: string;
 }

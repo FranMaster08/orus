@@ -4,11 +4,13 @@ import { ConsultationsController } from './controllers/consultations.controller'
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConsultationsEntity } from './entities/consultations.entity';
 import { FilesModule } from '../files/files.module';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ConsultationsEntity], 'thv-db'),
     forwardRef(() => FilesModule),
+    forwardRef(() => UsersModule),
   ],
   providers: [ConsultationsService],
   controllers: [ConsultationsController],

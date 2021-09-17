@@ -56,6 +56,9 @@ export class UsersEntity {
   @Column({ name: 'token_password_recovery' })
   tokenPasswordRecovery: string;
 
+  @Column({ name: 'family_id' })
+  familyId: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

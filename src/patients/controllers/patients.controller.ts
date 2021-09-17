@@ -23,4 +23,9 @@ export class PatientsController {
   async getMedicalHistory(@Param('id') id: string): Promise<IMedicalHistory[]> {
     return await this.patientsService.getMedicalHistory(id);
   }
+
+  @Get(':id/family')
+  async getPatientFamily(@Param('id') id: string): Promise<IPatient[]> {
+    return await this.patientsService.getPatientFamilyByPatientId(id);
+  }
 }

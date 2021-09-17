@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RoleType } from '../../role/roletype.enum';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 // import * as moment from 'moment';
 import { CancelConsultationDto } from '../dto/cancel-consultation.dto';
 import { CreateConsultationDto } from '../dto/create-consultation.dto';
@@ -17,8 +17,7 @@ import { ConsultationsEntity } from '../entities/consultations.entity';
 import { ConsultationsStatus } from '../enum/consultations-status.enum';
 import { IConsultation } from '../../shared/interfaces/consultations.interfaces';
 import { FilesService } from '../../files/services/files.service';
-import { IUser } from 'src/shared/interfaces/users.interfaces';
-import { IPatient } from 'src/shared/interfaces/patients.interfaces';
+import { UsersService } from 'src/users/services/users.service';
 
 @Injectable()
 export class ConsultationsService {
@@ -29,6 +28,8 @@ export class ConsultationsService {
     private readonly consultationsRepository: Repository<ConsultationsEntity>,
     @Inject(forwardRef(() => FilesService))
     private readonly filesService: FilesService,
+    // @Inject(forwardRef(() => UsersService))
+    private readonly usersService: UsersService,
   ) {}
 
   async createConsultation(
@@ -103,6 +104,8 @@ export class ConsultationsService {
         patient: consultation.patient,
       }));
     } else if (role === RoleType.PATIENT) {
+      const familyIds = await this.usersService.findFamilyIdsByPatientId(id);
+
       consultations = await this.consultationsRepository.find({
         select: [
           'id',
@@ -115,7 +118,9 @@ export class ConsultationsService {
           'exams',
           'quote',
         ],
-        where: { patientId: id },
+        where: {
+          patientId: In([id, ...familyIds]),
+        },
         relations: ['patient', 'doctor'],
         order: { date: 'ASC' },
       });
