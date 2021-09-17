@@ -9,12 +9,18 @@ import { Repository } from 'typeorm';
 import { CreateDoctorDto } from '../dto/create-doctor.dto';
 import { DtoScheduleDay } from '../dto/schedule-day.dto';
 import { DoctorsEntity } from '../entities/doctors.entity';
+import { IUser } from '../../shared/interfaces/users.interfaces';
+import { GenderType } from '../../users/enum/gender.enum';
+import { UsersEntity } from '../../users/entities/users.entity';
+import { RoleType } from '../../role/roletype.enum';
 
 @Injectable()
 export class DoctorsService {
   constructor(
     @InjectRepository(DoctorsEntity, 'thv-db')
     private readonly doctorsRepository: Repository<DoctorsEntity>,
+    @InjectRepository(UsersEntity, 'thv-db')
+    private readonly usersRepository: Repository<UsersEntity>,
   ) {}
 
   async createDoctor(doctorDetails: CreateDoctorDto): Promise<DoctorsEntity> {
@@ -78,5 +84,30 @@ export class DoctorsService {
     });
 
     return doctorSchedule;
+  }
+
+  async getDoctors(): Promise<IUser[]> {
+    const find = await this.usersRepository.find({
+      where: { role: RoleType.DOCTOR },
+      order: { firstName: 'ASC' },
+    });
+
+    const doctors: IUser[] = find.map((user) => {
+      let gender = GenderType.MALE;
+      if (user.gender === GenderType.FELAME) {
+        gender = GenderType.FELAME;
+      }
+      return {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        dni: user.dni,
+        status: user.status,
+        birthDate: user.birthDate,
+        gender,
+      };
+    });
+    return doctors;
   }
 }

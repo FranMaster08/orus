@@ -25,7 +25,7 @@ export class ConsultationsController {
   @Post()
   async createConsultation(
     @Body() data: CreateConsultationDto,
-  ): Promise<ConsultationsEntity> {
+  ): Promise<IConsultation> {
     return await this.consultationsService.createConsultation(data);
   }
 

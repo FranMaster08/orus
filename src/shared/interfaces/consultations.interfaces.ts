@@ -18,4 +18,5 @@ export interface IConsultation {
   exams: string;
   quote: string;
   patient: IPatient;
+  doctor?: IPatient;
 }

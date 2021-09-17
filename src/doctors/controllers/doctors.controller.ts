@@ -8,6 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { IUser } from 'src/shared/interfaces/users.interfaces';
 import { IScheduleDay } from '../../shared/interfaces/doctor.interfaces';
 import { CreateDoctorDto } from '../dto/create-doctor.dto';
 import { DtoScheduleDay } from '../dto/schedule-day.dto';
@@ -37,5 +38,10 @@ export class DoctorsController {
     @Body() schedule: DtoScheduleDay,
   ): Promise<IScheduleDay[]> {
     return await this.doctorsService.updateSchedule(id, schedule);
+  }
+
+  @Get()
+  async getDoctors(): Promise<IUser[]> {
+    return await this.doctorsService.getDoctors();
   }
 }

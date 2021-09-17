@@ -17,6 +17,8 @@ import { ConsultationsEntity } from '../entities/consultations.entity';
 import { ConsultationsStatus } from '../enum/consultations-status.enum';
 import { IConsultation } from '../../shared/interfaces/consultations.interfaces';
 import { FilesService } from '../../files/services/files.service';
+import { IUser } from 'src/shared/interfaces/users.interfaces';
+import { IPatient } from 'src/shared/interfaces/patients.interfaces';
 
 @Injectable()
 export class ConsultationsService {
@@ -58,6 +60,8 @@ export class ConsultationsService {
       { relations: ['patient'] },
     );
 
+    getConsultation.observations = JSON.parse(getConsultation.observations);
+
     return getConsultation;
 
     // TODO: enviar mail con la agenda de la consulta
@@ -66,6 +70,7 @@ export class ConsultationsService {
   }
 
   async getConsultations(role: RoleType, id: string): Promise<IConsultation[]> {
+    this.logger.log(role + ' ' + id);
     let consultations: IConsultation[];
     if (role === RoleType.DOCTOR) {
       consultations = await this.consultationsRepository.find({
@@ -111,7 +116,7 @@ export class ConsultationsService {
           'quote',
         ],
         where: { patientId: id },
-        relations: ['patient'],
+        relations: ['patient', 'doctor'],
         order: { date: 'ASC' },
       });
 
@@ -126,6 +131,7 @@ export class ConsultationsService {
         exams: JSON.parse(consultation.exams),
         quote: JSON.parse(consultation.quote),
         patient: consultation.patient,
+        doctor: consultation.doctor,
       }));
     } else if (role === RoleType.ADMIN) {
       consultations = await this.consultationsRepository.find();
@@ -163,7 +169,7 @@ export class ConsultationsService {
   async cancelConsultation(
     id: string,
     data: CancelConsultationDto,
-    user_rol: RoleType.PATIENT | RoleType.DOCTOR,
+    userRol: RoleType.PATIENT | RoleType.DOCTOR,
   ): Promise<ConsultationsEntity> {
     this.logger.log(
       `BEGIN [${this.cancelConsultation.name}] Params[id: string = ${id}]`,
@@ -174,9 +180,9 @@ export class ConsultationsService {
     }
 
     let status = ConsultationsStatus.CANCELLED_ADMIN;
-    if (user_rol === RoleType.PATIENT) {
+    if (userRol === RoleType.PATIENT) {
       status = ConsultationsStatus.CANCELLED_PATIENT;
-    } else if (user_rol === RoleType.DOCTOR) {
+    } else if (userRol === RoleType.DOCTOR) {
       status = ConsultationsStatus.CANCELLED_DOCTOR;
     }
 
@@ -185,7 +191,10 @@ export class ConsultationsService {
       observations: JSON.stringify(data.observations),
     });
 
-    return await this.consultationsRepository.findOne(id);
+    const find = await this.consultationsRepository.findOne(id);
+    find.observations = JSON.parse(find.observations);
+
+    return find;
 
     // TODO: se envia email informando la cancelacion
   }
@@ -193,7 +202,7 @@ export class ConsultationsService {
   async rescheduleConsultation(
     id: string,
     data: RescheduleConsultationDto,
-    user_rol: RoleType.PATIENT | RoleType.DOCTOR,
+    userRol: RoleType.PATIENT | RoleType.DOCTOR,
   ): Promise<IConsultation> {
     this.logger.log(
       `BEGIN [${this.rescheduleConsultation.name}] Params[id: string = ${id}]`,
@@ -209,7 +218,10 @@ export class ConsultationsService {
       observations: JSON.stringify(data.observations),
     });
 
-    return await this.consultationsRepository.findOne(id);
+    const find = await this.consultationsRepository.findOne(id);
+    find.observations = JSON.parse(find.observations);
+
+    return find;
 
     // TODO: se envia email cinformando la reagenda
   }
