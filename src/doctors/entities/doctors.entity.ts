@@ -1,4 +1,3 @@
-
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity('doctors')
@@ -9,20 +8,20 @@ export class DoctorsEntity {
   @Column()
   files: string; // TODO: hacer interfaces de estructura detallada de objeto .. YA ESTA HECHA
 
-  @Column()
-  professional_backgroud: string; // TODO: hacer interfaces de estructura detallada de objeto.. YA ESTA HECHA
+  @Column({ name: 'professional_backgroud' })
+  professionalBackgroud: string; // TODO: hacer interfaces de estructura detallada de objeto.. YA ESTA HECHA
 
   @Column()
   specialty: string;
 
-  @Column()
-  collegiate_number: string;
+  @Column({ name: 'collegiate_number' })
+  collegiateNumber: string;
 
-  @Column()
-  consultation_rooms: string; // TODO: hacer interfaces de estructura detallada de objeto.. YA ESTA HECHA creo
+  @Column({ name: 'consultation_rooms' })
+  consultationRooms: string; // TODO: hacer interfaces de estructura detallada de objeto.. YA ESTA HECHA creo
 
-  @Column()
-  insurance_companies: string; // TODO: hacer interfaces de estructura detallada de objeto,,  o lo recibe asi como string ? porque lle hace un JSON.strinfy.. YA ESTA HECHA
+  @Column({ name: 'insurance_companies' })
+  insuranceCompanies: string; // TODO: hacer interfaces de estructura detallada de objeto,,  o lo recibe asi como string ? porque lle hace un JSON.strinfy.. YA ESTA HECHA
 
   @Column()
   schedule: string; // TODO: hacer interfaces de estructura detallada de objeto, enum para cada uno de los dias de la semana, ya hay en el front

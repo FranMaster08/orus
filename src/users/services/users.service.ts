@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UsersEntity } from '../entities/users.entity';
@@ -8,6 +8,8 @@ import { IUser } from '../../shared/interfaces/users.interfaces';
 
 @Injectable()
 export class UsersService {
+  logger = new Logger();
+
   constructor(
     @InjectRepository(UsersEntity, 'thv-db')
     private readonly usersRepository: Repository<UsersEntity>,
@@ -29,6 +31,7 @@ export class UsersService {
     nuevoUsuario.birthDate = user.birthDate;
     nuevoUsuario.password = await this.hashPassword(user.password);
     nuevoUsuario.familyId = user.familyId;
+    nuevoUsuario.medicalCenterId = user.medicalCenterId;
 
     const userCreate = await this.usersRepository.create(nuevoUsuario);
     const userSave = await this.usersRepository.save(userCreate);
@@ -66,6 +69,8 @@ export class UsersService {
   }
 
   async findOne(config: { where: IUser }): Promise<UsersEntity> {
+    const context = `${UsersService.name} | ${this.findOne.name}`;
+    this.logger.log(`config: ${JSON.stringify(config)}`, `${context} | BEGIN`);
     const { where } = config;
     return await this.usersRepository.findOne({ where });
   }

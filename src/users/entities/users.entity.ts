@@ -3,11 +3,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { UserStatusEnum } from '../enum/user-status.enum';
 import { GenderType } from '../enum/gender.enum';
+import { DoctorsEntity } from '../../doctors/entities/doctors.entity';
 
 @Entity('users')
 export class UsersEntity {
@@ -42,7 +45,7 @@ export class UsersEntity {
     type: 'enum',
     enum: RoleType,
   })
-  role: string;
+  role: RoleType;
 
   @Column({
     type: 'enum',
@@ -59,9 +62,16 @@ export class UsersEntity {
   @Column({ name: 'family_id' })
   familyId: string;
 
+  @Column({ name: 'medical_center_id' })
+  medicalCenterId: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  @ManyToOne(() => DoctorsEntity, { cascade: false, nullable: false })
+  @JoinColumn({ name: 'id', referencedColumnName: 'id' })
+  doctorDetail: DoctorsEntity;
 }

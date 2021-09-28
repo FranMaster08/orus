@@ -8,10 +8,9 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { RoleType } from '../../role/roletype.enum';
-import { GenderType } from '../enum/gender.enum';
+import { GenderType } from '../../users/enum/gender.enum';
 
-export class CreateUserDto {
+export class UpdateDoctorUserDto {
   @IsNotEmpty()
   @IsString()
   readonly firstName: string;
@@ -28,16 +27,6 @@ export class CreateUserDto {
   @Transform(({ value }) => (value ? value.trim() : value))
   @IsString()
   readonly dni: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(6)
-  readonly password: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @IsEnum(RoleType)
-  readonly role: RoleType;
 
   @IsNotEmpty()
   @IsString()

@@ -24,7 +24,7 @@ export class CreateDoctorDto {
   readonly files: IFiles;
 
   @IsObject()
-  readonly professional_backgroud: IProfessionalBackgroud;
+  readonly professionalBackgroud: IProfessionalBackgroud;
 
   @IsNotEmpty()
   @IsString()
@@ -32,13 +32,13 @@ export class CreateDoctorDto {
 
   @IsNotEmpty()
   @IsString()
-  readonly collegiate_number: string;
+  readonly collegiateNumber: string;
 
   @IsArray()
-  readonly consultation_rooms: string[];
+  readonly consultationRooms: string[];
 
   @IsArray()
-  readonly insurance_companies: string[];
+  readonly insuranceCompanies: string[];
 
   @Type(() => DtoScheduleDay)
   @ValidateNested({ each: true })

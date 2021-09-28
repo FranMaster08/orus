@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IScheduleDay } from '../../shared/interfaces/doctor.interfaces';
@@ -13,14 +14,23 @@ import { IUser } from '../../shared/interfaces/users.interfaces';
 import { GenderType } from '../../users/enum/gender.enum';
 import { UsersEntity } from '../../users/entities/users.entity';
 import { RoleType } from '../../role/roletype.enum';
+import { UsersService } from '../../users/services/users.service';
+import { UpdateDoctorAndUserDto } from '../dto/update-doctor-and-user.dto';
+import {
+  TypeResponse,
+  TypeResponseError,
+} from '../../shared/types/response.type';
 
 @Injectable()
 export class DoctorsService {
+  logger = new Logger();
+
   constructor(
     @InjectRepository(DoctorsEntity, 'thv-db')
     private readonly doctorsRepository: Repository<DoctorsEntity>,
     @InjectRepository(UsersEntity, 'thv-db')
     private readonly usersRepository: Repository<UsersEntity>,
+    private readonly usersService: UsersService,
   ) {}
 
   async createDoctor(doctorDetails: CreateDoctorDto): Promise<DoctorsEntity> {
@@ -35,16 +45,16 @@ export class DoctorsService {
     let newDoctor = new DoctorsEntity();
     newDoctor.id = doctorDetails.id;
     newDoctor.files = JSON.stringify(doctorDetails.files);
-    newDoctor.professional_backgroud = JSON.stringify(
-      doctorDetails.professional_backgroud,
+    newDoctor.professionalBackgroud = JSON.stringify(
+      doctorDetails.professionalBackgroud,
     );
     newDoctor.specialty = doctorDetails.specialty;
-    newDoctor.collegiate_number = doctorDetails.collegiate_number;
-    newDoctor.consultation_rooms = JSON.stringify(
-      doctorDetails.consultation_rooms,
+    newDoctor.collegiateNumber = doctorDetails.collegiateNumber;
+    newDoctor.consultationRooms = JSON.stringify(
+      doctorDetails.consultationRooms,
     );
-    newDoctor.insurance_companies = JSON.stringify(
-      doctorDetails.insurance_companies,
+    newDoctor.insuranceCompanies = JSON.stringify(
+      doctorDetails.insuranceCompanies,
     );
     newDoctor.schedule = JSON.stringify(doctorDetails.schedule);
 
@@ -89,6 +99,7 @@ export class DoctorsService {
   async getDoctors(): Promise<IUser[]> {
     const find = await this.usersRepository.find({
       where: { role: RoleType.DOCTOR },
+      relations: ['doctorDetail'],
       order: { firstName: 'ASC' },
     });
 
@@ -106,8 +117,104 @@ export class DoctorsService {
         status: user.status,
         birthDate: user.birthDate,
         gender,
+        medicalCenterId: user.medicalCenterId,
+        doctorDetail: {
+          id: user.doctorDetail.id,
+          files: JSON.parse(user.doctorDetail.files),
+          professionalBackgroud: JSON.parse(
+            user.doctorDetail.professionalBackgroud,
+          ),
+          specialty: user.doctorDetail.specialty,
+          collegiateNumber: user.doctorDetail.collegiateNumber,
+          consultationRooms: JSON.parse(user.doctorDetail.consultationRooms),
+          insuranceCompanies: JSON.parse(user.doctorDetail.insuranceCompanies),
+          schedule: user.doctorDetail.schedule,
+        },
       };
     });
     return doctors;
+  }
+
+  async updateDoctor(
+    id: string,
+    userAndDoctorDetails: UpdateDoctorAndUserDto,
+  ): Promise<TypeResponse | TypeResponseError> {
+    const context = `${DoctorsService.name} | ${this.updateDoctor.name}`;
+    this.logger.log(
+      `userAndDoctorDetails: ${JSON.stringify(userAndDoctorDetails)}`,
+      `${context} | BEGIN`,
+    );
+
+    if (!(await this.doctorsRepository.count({ id }))) {
+      throw new ConflictException('Config doctor not found');
+    }
+
+    const updateDoctorDetailData = {
+      specialty: userAndDoctorDetails.doctorDetail.specialty,
+      collegiateNumber: userAndDoctorDetails.doctorDetail.collegiateNumber,
+      consultationRooms: JSON.stringify(
+        userAndDoctorDetails.doctorDetail.consultationRooms,
+      ),
+    };
+
+    const updateDoctorDetail = await this.doctorsRepository.update(
+      id,
+      updateDoctorDetailData,
+    );
+
+    const updateUserData = {
+      medicalCenterId: userAndDoctorDetails.user.medicalCenterId,
+      firstName: userAndDoctorDetails.user.firstName,
+      lastName: userAndDoctorDetails.user.lastName,
+      gender: userAndDoctorDetails.user.gender,
+      birthDate: userAndDoctorDetails.user.birthDate,
+      email: userAndDoctorDetails.user.email,
+      dni: userAndDoctorDetails.user.dni,
+    };
+
+    const updateUser = await this.usersService.update({ id }, updateUserData);
+
+    let resultUser = false;
+    let resultDoctor = false;
+    let message = '';
+
+    if (updateUser) {
+      this.logger.log(`User has been updated`, context);
+      resultUser = true;
+    } else {
+      this.logger.log(`User has not been updated`, context);
+    }
+
+    if (updateDoctorDetail.affected) {
+      this.logger.log(`Doctor detail has been updated`, context);
+      resultDoctor = true;
+    } else {
+      this.logger.log(`Doctor detail has not been updated`, context);
+    }
+
+    if (resultUser) {
+      message += 'Step 1: User has been updated. ';
+    }
+    if (resultDoctor) {
+      message += 'Step 2: Doctor detail has been updated. ';
+    }
+
+    if (resultUser || resultDoctor) {
+      return {
+        statusCode: 1,
+        message,
+        data: {
+          id,
+          ...updateUserData,
+          ...updateDoctorDetailData,
+        },
+      };
+    } else {
+      return {
+        statusCode: 0,
+        error: 'Not updated',
+        message: 'Doctor has not been updated',
+      };
+    }
   }
 }

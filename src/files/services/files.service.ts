@@ -45,7 +45,10 @@ export class FilesService {
         const base64Img = file.base64;
         const fileName = `${uuidv4()}.${file.extension}`;
         const content = Buffer.from(base64Img, 'base64');
-        fs.writeFileSync(`./public/consultations/attachments/${fileName}`, content);
+        fs.writeFileSync(
+          `./public/consultations/attachments/${fileName}`,
+          content,
+        );
 
         urlFiles.push({
           name: fileName,
@@ -175,7 +178,7 @@ export class FilesService {
     );
     html = html.replace(
       '{{doctorCollegiateNumber}}',
-      consultation.doctorDetail.collegiate_number,
+      consultation.doctorDetail.collegiateNumber,
     );
     html = html.replace(
       '{{doctorSpecialty}}',
