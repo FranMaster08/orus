@@ -62,6 +62,10 @@ export class AuthService {
       email: user.email,
       status: user.status,
       role: user.role,
+      dni: user.dni,
+      gender: user.gender,
+      birthDate: user.birthDate,
+      familyId: user.familyId,
     };
 
     const accessToken = this.jwtService.sign(jwtPayload, {
