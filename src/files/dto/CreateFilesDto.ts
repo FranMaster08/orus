@@ -34,6 +34,9 @@ export class CreateFilesDto {
   @IsString()
   readonly consultationId: string;
 
+  @IsString()
+  readonly medicalHistoryId: string;
+
   @ValidateNested({ each: true })
   @Type(() => FileDto)
   @IsArray()

@@ -28,6 +28,9 @@ export class FilesEntity {
   @Column({ name: 'consultation_id' })
   consultationId: string;
 
+  @Column({ name: 'medical_history_id' })
+  medicalHistoryId: string;
+
   @Column()
   files: string; // es un [] pero dice un error que Array no es soportado en database typeorm
 

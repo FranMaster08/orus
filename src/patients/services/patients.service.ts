@@ -8,6 +8,7 @@ import { UserStatusEnum } from '../../users/enum/user-status.enum';
 import { Repository } from 'typeorm';
 import { IMedicalHistory } from '../../shared/interfaces/medical-history.interfaces';
 import { MedicalHistoryEntity } from '../../medicalHistory/entities/medical-history.entity';
+import { FilesEntity } from 'src/files/entities/files.entity';
 
 @Injectable()
 export class PatientsService {
@@ -16,6 +17,8 @@ export class PatientsService {
     private readonly usersRepository: Repository<UsersEntity>,
     @InjectRepository(MedicalHistoryEntity, 'thv-db')
     private readonly medicalHistoryRepository: Repository<MedicalHistoryEntity>,
+    @InjectRepository(FilesEntity, 'thv-db')
+    private readonly filesRepository: Repository<FilesEntity>,
   ) {}
 
   async getPatients(): Promise<IPatient[]> {
@@ -68,11 +71,42 @@ export class PatientsService {
       );
     }
 
-    const transformHistory: IMedicalHistory[] = history.map((history) => ({
-      createdAt: history.createdAt,
-      doctorId: history.doctorId,
-      history: history.history,
-    }));
+    // TODO: consultar los files del historial clínico
+    // this.filesRepository.find({
+    //   where: {
+    //     medicalHistoryId: history.
+    //   }
+    // })
+    // user for para hacer un await a files, cambiar .map
+
+    // const transformHistory: IMedicalHistory[] = history.map((history) => ({
+    //   createdAt: history.createdAt,
+    //   doctorId: history.doctorId,
+    //   history: history.history,
+    //   // TODO: adjuntar los files aqui
+    // }));
+
+    let transformHistory: IMedicalHistory[] = [];
+    for (let n = 0; n < history.length; n++) {
+      const searchFiles = await this.filesRepository.findOne({
+        select: ['files'],
+        where: {
+          medicalHistoryId: history[n].id,
+        },
+      });
+
+      let files = [];
+      if (searchFiles) {
+        files = JSON.parse(searchFiles.files);
+      }
+
+      transformHistory.push({
+        createdAt: history[n].createdAt,
+        doctorId: history[n].doctorId,
+        history: history[n].history,
+        files,
+      });
+    }
 
     return transformHistory;
   }

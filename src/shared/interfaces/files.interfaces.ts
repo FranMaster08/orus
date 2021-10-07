@@ -15,5 +15,6 @@ export interface IFilesDB {
   doctorId: string;
   context: FileContext;
   consultationId: string;
+  medicalHistoryId: string;
   files: string[];
 }

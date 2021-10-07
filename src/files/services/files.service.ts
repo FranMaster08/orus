@@ -88,6 +88,7 @@ export class FilesService {
     newFiles.doctorId = files.doctorId;
     newFiles.context = files.context;
     newFiles.consultationId = files.consultationId;
+    newFiles.medicalHistoryId = files.medicalHistoryId;
     newFiles.files = JSON.stringify(files.files);
 
     const saveFiles = await this.filesRepository.save(newFiles);
