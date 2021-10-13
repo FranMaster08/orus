@@ -8,7 +8,8 @@ import { UserStatusEnum } from '../../users/enum/user-status.enum';
 import { Repository } from 'typeorm';
 import { IMedicalHistory } from '../../shared/interfaces/medical-history.interfaces';
 import { MedicalHistoryEntity } from '../../medicalHistory/entities/medical-history.entity';
-import { FilesEntity } from 'src/files/entities/files.entity';
+import { FilesEntity } from '../../files/entities/files.entity';
+import { FileExtension } from '../../files/enum/files.enum';
 
 @Injectable()
 export class PatientsService {
@@ -71,21 +72,6 @@ export class PatientsService {
       );
     }
 
-    // TODO: consultar los files del historial clínico
-    // this.filesRepository.find({
-    //   where: {
-    //     medicalHistoryId: history.
-    //   }
-    // })
-    // user for para hacer un await a files, cambiar .map
-
-    // const transformHistory: IMedicalHistory[] = history.map((history) => ({
-    //   createdAt: history.createdAt,
-    //   doctorId: history.doctorId,
-    //   history: history.history,
-    //   // TODO: adjuntar los files aqui
-    // }));
-
     let transformHistory: IMedicalHistory[] = [];
     for (let n = 0; n < history.length; n++) {
       const searchFiles = await this.filesRepository.findOne({
@@ -95,16 +81,30 @@ export class PatientsService {
         },
       });
 
-      let files = [];
+      let attachedFiles: { images: string[]; pdfs: string[] } = {
+        images: [],
+        pdfs: [],
+      };
+
       if (searchFiles) {
-        files = JSON.parse(searchFiles.files);
+        // files = JSON.parse(searchFiles.files);
+        JSON.parse(searchFiles.files).forEach((attached: string) => {
+          if (attached.includes(FileExtension.PDF)) {
+            attachedFiles.pdfs.push(attached);
+          } else if (
+            attached.includes(FileExtension.PNG) ||
+            attached.includes(FileExtension.JPEG)
+          ) {
+            attachedFiles.images.push(attached);
+          }
+        });
       }
 
       transformHistory.push({
         createdAt: history[n].createdAt,
         doctorId: history[n].doctorId,
         history: history[n].history,
-        files,
+        files: attachedFiles,
       });
     }
 

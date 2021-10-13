@@ -9,7 +9,6 @@ import {
   Inject,
   Injectable,
   Logger,
-  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -18,7 +17,7 @@ import { FilesEntity } from '../entities/files.entity';
 import { IFilesDB, IUrlFiles } from '../../shared/interfaces/files.interfaces';
 import { IQuote } from '../../shared/interfaces/consultations.interfaces';
 import { ConsultationsService } from '../../consultations/services/consultations.service';
-import { FileExtension } from '../enum/files.enum';
+import { FileContext, FileExtension } from '../enum/files.enum';
 import { GenderType } from '../../users/enum/gender.enum';
 import { ConsultationsStatus } from '../../consultations/enum/consultations-status.enum';
 import { NotifyService } from '../../notify/services/notify.service';
@@ -36,6 +35,10 @@ export class FilesService {
   ) {}
 
   async uploadFilesToDirectory(files: CreateFilesDto) {
+    this.logger.log(
+      `Cargando files`,
+      `${FilesService.name} | ${this.uploadFilesToDirectory.name} | BEGIN `,
+    );
     const FILES_URL = process.env.FILES_URL;
 
     try {
@@ -45,10 +48,18 @@ export class FilesService {
         const base64Img = file.base64;
         const fileName = `${uuidv4()}.${file.extension}`;
         const content = Buffer.from(base64Img, 'base64');
-        fs.writeFileSync(
-          `./public/consultations/attachments/${fileName}`,
-          content,
-        );
+
+        if (files.context === FileContext.CONSULTATION) {
+          fs.writeFileSync(
+            `./public/consultations/attachments/${fileName}`,
+            content,
+          );
+        } else if (files.context === FileContext.MEDICAL_HISTORY) {
+          fs.writeFileSync(
+            `./public/medicalHistories/attachments/${fileName}`,
+            content,
+          );
+        }
 
         urlFiles.push({
           name: fileName,
@@ -67,7 +78,29 @@ export class FilesService {
       );
 
       const filesDB: string[] = urlFiles.map((file) => file.name);
-      return await this.saveFiles({ ...files, files: filesDB });
+      const saveFiles = await this.saveFiles({ ...files, files: filesDB });
+
+      let attachedFiles: { images: string[]; pdfs: string[] } = {
+        images: [],
+        pdfs: [],
+      };
+      if (saveFiles) {
+        JSON.parse(saveFiles.files).forEach((attached: string) => {
+          if (attached.includes(FileExtension.PDF)) {
+            attachedFiles.pdfs.push(attached);
+          } else if (
+            attached.includes(FileExtension.PNG) ||
+            attached.includes(FileExtension.JPEG)
+          ) {
+            attachedFiles.images.push(attached);
+          }
+        });
+      }
+
+      return {
+        ...saveFiles,
+        files: attachedFiles,
+      };
     } catch (error) {
       this.logger.error(
         `Error[${error.message}]`,
@@ -100,10 +133,23 @@ export class FilesService {
     return saveFiles;
   }
 
-  async getAttachedFilesByConsultationId(consultationId: string) {
-    const findAttachedFiles = await this.filesRepository.findOne({
-      where: { consultationId },
-    });
+  async getAttachedFilesByContextId(id: string, context: FileContext) {
+    let findAttachedFiles: FilesEntity = null;
+
+    if (context === FileContext.CONSULTATION) {
+      findAttachedFiles = await this.filesRepository.findOne({
+        where: { consultationId: id },
+      });
+    } else if (context === FileContext.MEDICAL_HISTORY) {
+      findAttachedFiles = await this.filesRepository.findOne({
+        where: { medicalHistoryId: id },
+      });
+    } else {
+      return {
+        images: [],
+        pdfs: [],
+      };
+    }
 
     if (!findAttachedFiles) {
       // throw new NotFoundException('Files Consultation not found');
@@ -127,7 +173,7 @@ export class FilesService {
       ) {
         attachedFiles.images.push(attached);
       }
-      return attached;
+      // return attached;
     });
 
     return attachedFiles;
