@@ -56,10 +56,10 @@ export class ConsultationsService {
     const saveConsultation = await this.consultationsRepository.save(
       newConsultation,
     );
-    const getConsultation = await this.consultationsRepository.findOne(
-      saveConsultation.id,
-      { relations: ['patient'] },
-    );
+    const getConsultation = await this.consultationsRepository.findOne({
+      where: { id: saveConsultation.id },
+      relations: ['patient'],
+    });
 
     getConsultation.observations = JSON.parse(getConsultation.observations);
 
@@ -153,7 +153,7 @@ export class ConsultationsService {
       `BEGIN [${this.updateConsultation.name}] Params[id: string = ${id}]`,
     );
 
-    if (!(await this.consultationsRepository.findOne(id))) {
+    if (!(await this.consultationsRepository.findOne({ where: { id } }))) {
       throw new NotFoundException('Medical consultation not found');
     }
 
@@ -168,7 +168,7 @@ export class ConsultationsService {
     // create pdf and send mail
     this.filesService.buildReportByConsultationId(id);
 
-    return await this.consultationsRepository.findOne(id);
+    return await this.consultationsRepository.findOne({ where: { id } });
   }
 
   async cancelConsultation(
@@ -180,7 +180,7 @@ export class ConsultationsService {
       `BEGIN [${this.cancelConsultation.name}] Params[id: string = ${id}]`,
     );
 
-    if (!(await this.consultationsRepository.findOne(id))) {
+    if (!(await this.consultationsRepository.findOne({ where: { id } }))) {
       throw new NotFoundException('Medical consultation not found');
     }
 
@@ -196,7 +196,7 @@ export class ConsultationsService {
       observations: JSON.stringify(data.observations),
     });
 
-    const find = await this.consultationsRepository.findOne(id);
+    const find = await this.consultationsRepository.findOne({ where: { id } });
     find.observations = JSON.parse(find.observations);
 
     return find;
@@ -213,7 +213,7 @@ export class ConsultationsService {
       `BEGIN [${this.rescheduleConsultation.name}] Params[id: string = ${id}]`,
     );
 
-    if (!(await this.consultationsRepository.findOne(id))) {
+    if (!(await this.consultationsRepository.findOne({ where: { id } }))) {
       throw new NotFoundException('Medical consultation not found');
     }
 
@@ -223,7 +223,7 @@ export class ConsultationsService {
       observations: JSON.stringify(data.observations),
     });
 
-    const find = await this.consultationsRepository.findOne(id);
+    const find = await this.consultationsRepository.findOneBy({ id });
     find.observations = JSON.parse(find.observations);
 
     return find;
@@ -232,12 +232,14 @@ export class ConsultationsService {
   }
 
   async findOne(id: string): Promise<ConsultationsEntity> {
-    const consultation = await this.consultationsRepository.findOne(id, {
+    const consultation = await this.consultationsRepository.find({
+      where: { id },
       relations: ['patient', 'doctor', 'doctorDetail'],
     });
+
     if (!consultation) {
       throw new NotFoundException('Medical consultation not found');
     }
-    return consultation;
+    return consultation[0];
   }
 }

@@ -36,7 +36,9 @@ export class DoctorsService {
   async createDoctor(doctorDetails: CreateDoctorDto): Promise<DoctorsEntity> {
     // TODO: antes de crear un doctor, verificar si existe como usuario... pues el mismo id del user es el del doctor
 
-    const exist = await this.doctorsRepository.count({ id: doctorDetails.id });
+    const exist = await this.doctorsRepository.countBy({
+      id: doctorDetails.id,
+    });
 
     if (exist) {
       throw new ConflictException('Config doctor id already exists');
@@ -64,7 +66,7 @@ export class DoctorsService {
   }
 
   async getSchedule(id: string) {
-    const doctor = await this.doctorsRepository.findOne(id);
+    const doctor = await this.doctorsRepository.findOne({ where: { id } });
 
     if (!doctor) {
       throw new NotFoundException('Doctor does not exist');
@@ -74,7 +76,7 @@ export class DoctorsService {
   }
 
   async updateSchedule(id: string, schedule: DtoScheduleDay) {
-    const doctor = await this.doctorsRepository.findOne(id);
+    const doctor = await this.doctorsRepository.findOneBy({ id });
 
     if (!doctor) {
       throw new NotFoundException('Doctor does not exist');
@@ -145,7 +147,7 @@ export class DoctorsService {
       `${context} | BEGIN`,
     );
 
-    if (!(await this.doctorsRepository.count({ id }))) {
+    if (!(await this.doctorsRepository.countBy({ id }))) {
       throw new ConflictException('Config doctor not found');
     }
 

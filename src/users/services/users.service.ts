@@ -16,7 +16,7 @@ export class UsersService {
   ) {}
 
   async createUser(user: CreateUserDto) {
-    const exist = await this.usersRepository.count({ email: user.email });
+    const exist = await this.usersRepository.countBy({ email: user.email });
     if (exist) {
       throw new ConflictException('User already exists');
     }
@@ -38,7 +38,9 @@ export class UsersService {
 
     // TODO: enviar email
 
-    let createdUser = await this.usersRepository.findOne(userSave.id, {});
+    let createdUser = await this.usersRepository.findOne({
+      where: { id: userSave.id },
+    });
 
     return createdUser;
   }
@@ -76,7 +78,7 @@ export class UsersService {
   }
 
   async findFamilyIdsByPatientId(patientId): Promise<string[]> {
-    const find = await this.usersRepository.find({ familyId: patientId });
+    const find = await this.usersRepository.findBy({ familyId: patientId });
     return find.map((user) => user.id);
   }
 

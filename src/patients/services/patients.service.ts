@@ -49,7 +49,7 @@ export class PatientsService {
   }
 
   async getPatientById(id: string): Promise<IPatient> {
-    const patient = await this.usersRepository.findOne({ id });
+    const patient = await this.usersRepository.findOneBy({ id });
 
     if (!patient) {
       throw new NotFoundException('Patient not found');
@@ -112,13 +112,15 @@ export class PatientsService {
   }
 
   async getPatientFamilyByPatientId(id: string): Promise<IPatient[]> {
-    const patient = await this.usersRepository.findOne({ id });
+    const patient = await this.usersRepository.findOneBy({ id });
 
     if (!patient) {
       throw new NotFoundException('Patient not found');
     }
 
-    const family = await this.usersRepository.find({ where: { familyId: id } });
+    const family = await this.usersRepository.find({
+      where: { familyId: id },
+    });
 
     return family;
   }

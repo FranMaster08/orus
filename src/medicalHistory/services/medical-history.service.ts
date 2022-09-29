@@ -44,7 +44,7 @@ export class MedicalHistoryService {
     id: string,
     data: UpdateMedicalHistoryDto,
   ): Promise<MedicalHistoryEntity> {
-    if (!(await this.medicalHistoryRepository.findOne(id))) {
+    if (!(await this.medicalHistoryRepository.findOneBy({ id }))) {
       throw new NotFoundException('Medical history not found');
     }
 
@@ -57,6 +57,6 @@ export class MedicalHistoryService {
       },
     );
 
-    return await this.medicalHistoryRepository.findOne(id);
+    return await this.medicalHistoryRepository.findOneBy({ id });
   }
 }

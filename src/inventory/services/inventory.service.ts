@@ -62,7 +62,7 @@ export class InventoryService {
       throw new ConflictException('Inventory has not been updated');
     }
 
-    return await this.inventoryRepository.findOne(id);
+    return await this.inventoryRepository.findOneBy({ id });
   }
 
   async deleteInventory(id: string): Promise<TypeResponse> {
